@@ -48,6 +48,9 @@ Project Organization
     │   │
     │   └── visualization  <- Scripts to create exploratory and results oriented visualizations
     │       └── visualize.py
+    ├── test
+    │   ├── __init__.py    <- Makes src a Python module
+    │   └── test_mock.py   <- Mock Test, further tests can be added
     │
     └── tox.ini            <- tox file with settings for running tox; see tox.readthedocs.io
 
