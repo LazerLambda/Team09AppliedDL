@@ -2,6 +2,7 @@
 
 import gzip
 import shutil
+from random import shuffle
 
 import pandas as pd
 import torch
@@ -68,6 +69,10 @@ class AminoDS(Dataset):
         for i in range(len(final_data)):
             train_data.append([final_data[i], labels[i]])
         self.result = train_data
+
+    def shuffle(self) -> None:
+        """Shuffle Dataset."""
+        shuffle(self.result)
 
     def __len__(self) -> int:
         """Return Length of Dataset.
