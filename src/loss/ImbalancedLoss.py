@@ -1,12 +1,21 @@
 """Class for Loss Function for Imbalanced Data."""
-from typing import Any, Tuple, Union
+from typing import Union
 
 import torch
-from numpy import isin
 
 
 class ImbalancedLoss:
-    """Loss Function for"""
+    """Loss Function for Imbalanced Data.
+
+    Implementation according to TODO.
+
+    :method __init__: Init hyperparams.
+    :method sum_exp: Compute Sum over Sigmoid Loss Tensor.
+    :method sigmoid_loss: Compute sigmoid loss.
+    :method imbalanced_nnpu: Compute ImbalancednnPU-Loss.
+    :method nn_balancePN: Compute nnBalancePN.
+    :method __call__: Execute on Call.
+    """
 
     def __init__(
         self, device: Union[str, torch.device], p: float, p_: float = 0.5
@@ -30,7 +39,8 @@ class ImbalancedLoss:
     def sum_exp(self, x: torch.Tensor, sgn: int) -> torch.Tensor:
         """Compute Sum over Sigmoid Loss Tensor.
 
-        :param device: Device to compute on.
+        :param x: Tensor the sum is to be computed on.
+        :param sgn: Integer for sign of label.
 
         :return: Sum of tensor.
         """
@@ -38,8 +48,8 @@ class ImbalancedLoss:
             self.sigmoid_loss(
                 output=x,
                 label=(
-                    sgn
-                    * torch.ones((x.shape[0] if len(x.shape) > 0 else 0)).to(
+                    sgn *
+                    torch.ones((x.shape[0] if len(x.shape) > 0 else 0)).to(
                         self.device
                     )
                 ),
@@ -47,12 +57,14 @@ class ImbalancedLoss:
         )  # TODO: Remove?
 
     @staticmethod
-    def sigmoid_loss(output: torch.Tensor, label: torch.Tensor) -> torch.Tensor:
+    def sigmoid_loss(
+            output: torch.Tensor,
+            label: torch.Tensor) -> torch.Tensor:
         """Compute Sigmoid Loss Function.
 
         Compute:
-        :param output: predicted value.
-        :param device: Device to compute on.
+        :param output: Predicted value.
+        :param label: Labels.
 
         :return: loss
         """
@@ -61,9 +73,10 @@ class ImbalancedLoss:
     def imbalanced_nnpu(
         self, pred_p: torch.Tensor, pred_u: torch.Tensor
     ) -> torch.Tensor:
-        """Compute ImbalancednnPU-Loss
+        """Compute ImbalancednnPU-Loss.
 
-        Implementation according to https://www.ijcai.org/proceedings/2021/0412.pdf
+        Implementation according to
+        https://www.ijcai.org/proceedings/2021/0412.pdf.
 
         :param pred_p: Positive labeled data.
         :param pred_u: Unlabeled data.
