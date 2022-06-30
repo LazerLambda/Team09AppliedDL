@@ -26,8 +26,8 @@ class DebugDataset:
         os.remove(self.title)
 
 if __name__ == "__main__":
-    test  = DebugDataset()
-    test.create_debug_dataset(10, 5)
+    test  = DebugDataset(10, 5)
+    test.create_debug_dataset()
     test.rm_csv()
 
 

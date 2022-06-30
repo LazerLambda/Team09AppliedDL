@@ -1,12 +1,21 @@
 """Class for Loss Function for Imbalanced Data."""
-
 from typing import Union
 
 import torch
 
 
 class ImbalancedLoss:
-    """Loss Function Class for Imbalanced Data."""
+    """Loss Function for Imbalanced Data.
+
+    Implementation according to TODO.
+
+    :method __init__: Init hyperparams.
+    :method sum_exp: Compute Sum over Sigmoid Loss Tensor.
+    :method sigmoid_loss: Compute sigmoid loss.
+    :method imbalanced_nnpu: Compute ImbalancednnPU-Loss.
+    :method nn_balance_pn: Compute nnBalancePN.
+    :method __call__: Execute on Call.
+    """
 
     def __init__(
         self, device: Union[str, torch.device], p: float, p_: float = 0.5
@@ -19,7 +28,7 @@ class ImbalancedLoss:
         """
         assert isinstance(p, float)
         assert isinstance(p_, float)
-        assert isinstance(device, torch.device) or isinstance(device, str)
+        # assert isinstance(device, torch.device) or isinstance(device, str)
         assert p >= 0 and p <= 1
         assert p_ >= 0 and p_ <= 1
 
@@ -30,15 +39,21 @@ class ImbalancedLoss:
     def sum_exp(self, x: torch.Tensor, sgn: int) -> torch.Tensor:
         """Compute Sum over Sigmoid Loss Tensor.
 
-        :param x: Tensor with entries to sum up.
-        :param sgn: Sign for sigmoid loss fucntion.
+        :param x: Tensor the sum is to be computed on.
+        :param sgn: Integer for sign of label.
 
         :return: Sum of tensor.
         """
-        x_shape: int = x.shape[0] if len(x.shape) > 0 else 0
-        # TODO: Remove device here?
-        label: torch.Tensor = sgn * torch.ones(x_shape).to(self.device)
-        return torch.sum(self.sigmoid_loss(x, label))
+        return torch.sum(
+            self.sigmoid_loss(
+                output=x,
+                label=(
+                    sgn * torch.ones(
+                        (x.shape[0] if len(x.shape) > 0 else 0)).to(
+                        self.device)
+                ),
+            )
+        )  # TODO: Remove?
 
     @staticmethod
     def sigmoid_loss(
@@ -47,19 +62,16 @@ class ImbalancedLoss:
         """Compute Sigmoid Loss Function.
 
         Compute:
-        :param output: predicted value.
-        :param label: Ground truth labels.
+        :param output: Predicted value.
+        :param label: Labels.
 
-        :return: loss for input.
+        :return: loss
         """
-        product: torch.Tensor = torch.mul(output, label)
-        denum: torch.Tensor = torch.add(1, torch.exp(product))
-        return torch.div(1, denum)
+        return 1 / (1 + torch.exp(output * label))
 
     def imbalanced_nnpu(
-            self,
-            pred_p: torch.Tensor,
-            pred_u: torch.Tensor) -> torch.Tensor:
+        self, pred_p: torch.Tensor, pred_u: torch.Tensor
+    ) -> torch.Tensor:
         """Compute ImbalancednnPU-Loss.
 
         Implementation according to
@@ -96,15 +108,15 @@ class ImbalancedLoss:
 
         :returns: Loss for batch.
         """
-        clipped_imb_nnpn: torch.Tensor = torch.max(
+        clipped_imbnn_pu: torch.Tensor = torch.max(
             torch.Tensor([0]).to(self.device),
             self.imbalanced_nnpu(pred_p=pred_p, pred_u=pred_u),
         )
         np: int = pred_p.shape[0]
         if np == 0:
-            return clipped_imb_nnpn
+            return clipped_imbnn_pu
         else:
-            return self.p_ / np * self.sum_exp(pred_p, 1) + clipped_imb_nnpn
+            return self.p_ / np * self.sum_exp(pred_p, 1) + clipped_imbnn_pu
 
     def __call__(
             self,
@@ -121,7 +133,6 @@ class ImbalancedLoss:
         pred_u = predictions[labels != 1].to(self.device)
 
         if self.imbalanced_nnpu(pred_p, pred_u) >= 0:
-            # TODO: Sign correct?
             return self.nn_balance_pn(pred_p, pred_u)
         else:
             return -self.imbalanced_nnpu(pred_p, pred_u)

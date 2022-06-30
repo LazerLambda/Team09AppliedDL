@@ -1,38 +1,41 @@
-"""Script for Dataset Creation."""
+"""Modul for Debug Dataset."""
 
-# -*- coding: utf-8 -*-
-import logging
-from pathlib import Path
+import os
+import random
 
-import click
-from dotenv import find_dotenv, load_dotenv
+import pandas as pd
 
 
-@click.command()
-@click.argument("input_filepath", type=click.Path(exists=True))
-@click.argument("output_filepath", type=click.Path())
-def main(input_filepath, output_filepath):
-    """Run Main Function.
+class DebugDataset:
+    """Class for Debug."""
 
-    Runs data processing scripts to turn raw data from (../raw) into
-    cleaned data ready to be analyzed (saved in ../processed).
+    def __init__(self, n: int, p: int, path: str = "TEST_DATA.gzip"):
+        """Initialize Class.
 
-    :param input_filepath: Input Filepath.
-    :param output_filepath: Output Filepath.
-    """
-    logger = logging.getLogger(__name__)
-    logger.info("making final data set from raw data")
+        :param n: Size of dataset.
+        :param p: Length of features/proteines etc..
+        :param path: Path where dataset will be saved.
+        """
+        self.path: str = path
+        self.n: int = n
+        self.p: int = p
+        self.data: pd.DataFrame = None
 
+    def create_debug_dataset(self) -> None:
+        """Create Dataset as .gzip File."""
+        x: list = list(
+            map(
+                lambda e: e.join(random.choices(
+                    'ABCDEFGHIKLMNOPQRSTUVWXYZ',
+                    k=self.p)),
+                [''] * self.n))
+        y: list = random.choices([0, 1], k=self.n)
+        df: pd.DataFrame = pd.DataFrame({'window': x, 'is_positive': y})
 
-if __name__ == "__main__":
-    log_fmt = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-    logging.basicConfig(level=logging.INFO, format=log_fmt)
+        df.to_csv(self.path, compression='gzip')
 
-    # not used in this stub but often useful for finding various files
-    project_dir = Path(__file__).resolve().parents[2]
+        self.data = df
 
-    # find .env automagically by walking up directories until it's found, then
-    # load up the .env entries as environment variables
-    load_dotenv(find_dotenv())
-
-    main()
+    def rm_csv(self) -> None:
+        """Delete Dataset."""
+        os.remove(self.path)
