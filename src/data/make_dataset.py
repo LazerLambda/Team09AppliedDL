@@ -1,38 +1,38 @@
-"""Script for Dataset Creation."""
+import os
+import random
+import string
 
-# -*- coding: utf-8 -*-
-import logging
-from pathlib import Path
-
-import click
-from dotenv import find_dotenv, load_dotenv
+import pandas as pd
 
 
-@click.command()
-@click.argument("input_filepath", type=click.Path(exists=True))
-@click.argument("output_filepath", type=click.Path())
-def main(input_filepath, output_filepath):
-    """Run Main Function.
+class DebugDataset:
 
-    Runs data processing scripts to turn raw data from (../raw) into
-    cleaned data ready to be analyzed (saved in ../processed).
+    def __init__(self, n: int, p: int, path: str = "TEST_DATA.gzip"):
+        self.path: str = path
+        self.n: int = n
+        self.p: int = p
+        self.data: pd.DataFrame = None
 
-    :param input_filepath: Input Filepath.
-    :param output_filepath: Output Filepath.
-    """
-    logger = logging.getLogger(__name__)
-    logger.info("making final data set from raw data")
+    def create_debug_dataset(self) -> any:
+        x: list = list(
+            map(
+                lambda e:e.join(random.choices(
+                    'ABCDEFGHIKLMNOPQRSTUVWXYZ',
+                    k=self.p)),
+                [''] * self.n))
+        y: list = random.choices([0,1], k=self.n)
+        df: pd.DataFrame = pd.DataFrame({'window': x, 'is_positive': y})
+
+        df.to_csv(self.path, compression='gzip')
+
+        self.data = df
+
+    def rm_csv(self) -> None:
+        os.remove(self.path)
+
+# if __name__ == "__main__":
+# test  = DebugDataset(10, 5)
+# test.create_debug_dataset()
+# #     # test.rm_csv()
 
 
-if __name__ == "__main__":
-    log_fmt = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-    logging.basicConfig(level=logging.INFO, format=log_fmt)
-
-    # not used in this stub but often useful for finding various files
-    project_dir = Path(__file__).resolve().parents[2]
-
-    # find .env automagically by walking up directories until it's found, then
-    # load up the .env entries as environment variables
-    load_dotenv(find_dotenv())
-
-    main()
