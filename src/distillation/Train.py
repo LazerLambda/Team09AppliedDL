@@ -4,7 +4,7 @@ from typing import Callable
 
 import torch
 from torch import nn, optim
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, Dataset
 from tqdm import tqdm
 
 
@@ -76,7 +76,7 @@ class Train:
             # TODO: Delete iff class variable not necessary.
         self.module.to(self.device)
 
-    def train_teacher(self, data: any, path: str = None):
+    def train_teacher(self, data: Dataset, path: str = None):
         """Train Module.
 
         Training loop to train the defined model.
@@ -112,7 +112,7 @@ class Train:
 
     def train_student(
             self,
-            data: any,
+            data: Dataset,
             teacher: nn.Module,
             alpha: float,
             beta: float,
