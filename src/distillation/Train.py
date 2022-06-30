@@ -1,3 +1,5 @@
+"""Trainer Module."""
+
 from typing import Callable
 
 import torch
@@ -21,16 +23,15 @@ class Train:
             epochs: int,
             loss: Callable,
             lr: float,
-            save_at: int=-1,
-            title: str=None,
-            cont_train: bool=False,
-            device: torch.device=None
-            ):
+            save_at: int = -1,
+            title: str = None,
+            cont_train: bool = False,
+            device: torch.device = None):
         """Initialize Class.
 
         Set hyperparameters to class variables, check validity passed arguments
         and set correct device.
-        
+
         :param module: Model to be trained.
         :param optimizer: Optimizer for training.
         :param batch_size: Batch size used for training.
@@ -45,10 +46,12 @@ class Train:
         :param device: Device training should be computed on.
         """
         if title is None:
-            title = "set title to datetime" # TODO
-          
-        assert isinstance(module, nn.Module), "ERROR: `module` must be of class nn.Module."
-        # assert isinstance(optimizer, optim.Optimizer), "ERROR: `optimizer` must be of class optim.Optimizer."
+            title = "set title to datetime"  # TODO
+
+        assert isinstance(module, nn.Module),\
+            "ERROR: `module` must be of class nn.Module."
+        # assert isinstance(optimizer, optim.Optimizer),\
+        #     "ERROR: `optimizer` must be of class optim.Optimizer."
         assert batch_size > 0, "ERROR: `batch_size` must be larger than 0."
         assert callable(loss), "ERROR: `loss` must be callable."
         assert lr > 0 and lr < 1, "ERROR: `lr` must be in domain (0,1)"
@@ -64,24 +67,28 @@ class Train:
         self.cont_train: bool = cont_train
 
         if device is None:
-            self.device: torch.Device = torch.device("cuda" if torch.cuda.is_available() else "cpu") # TODO: Class variable necessary?
+            self.device: torch.Device =\
+                torch.device(
+                    "cuda" if torch.cuda.is_available() else "cpu")
+            # TODO: Class variable necessary?
         else:
-            self.device = device # TODO: Delete iff class variable not necessary.
+            self.device = device
+            # TODO: Delete iff class variable not necessary.
         self.module.to(self.device)
 
-    def train_teacher(self, data: any, path: str=None):
+    def train_teacher(self, data: any, path: str = None):
         """Train Module.
 
         Training loop to train the defined model.
         TODO: Write function for intermediate saving.
 
         :param data: Data the model will be trained on.
-        :param pyth: Path where intermediate results are saved.
+        :param path: Path where intermediate results are saved.
         """
         train_data = DataLoader(data, batch_size=self.batch_size, shuffle=True)
 
-        for epoch in tqdm(range(self.epochs), desc='Epoch Teacher'):
-            for step, [x, y] in enumerate(tqdm(train_data, desc='Batch')):
+        for _ in tqdm(range(self.epochs), desc='Epoch Teacher'):
+            for _, [x, y] in enumerate(tqdm(train_data, desc='Batch')):
                 x, y = x.to(self.device), y.to(self.device)
 
                 self.optimizer.zero_grad()
@@ -100,49 +107,58 @@ class Train:
         #                 'loss': self.loss,
         #                 }, path + self.title)
         #             print(f"Saved Model at {epoch}") if True else None
-                    
+
         # os.remove(path + self.title)
 
+    def train_student(
+            self,
+            data: any,
+            teacher: nn.Module,
+            alpha: float,
+            beta: float,
+            path: str = None):
+        """Train Module.
 
-    def train_student(self, data: any, teacher: nn.Module, alpha: float, beta: float, path: str=None):
-            """Train Module.
+        Training loop to train the defined student model.
+        TODO: Write function for intermediate saving.
 
-            Training loop to train the defined student model.
-            TODO: Write function for intermediate saving.
+        :param data: complete training dataset.
+        :param teacher: teacher model for creating
+            labels on part of the dataset.
+        :param alpha: balance the loss function.
+        :param beta: determine which proportion the
+            dataset should be split in.
+        :param path: Path where intermediate results are saved.
+        """
+        train_data = DataLoader(data, batch_size=self.batch_size, shuffle=True)
 
-            :param data: complete training dataset.
-            :param teacher: teacher model for creating labels on part of the dataset.
-            :param alpha: balance the loss function.
-            :param beta: determine which proportion the dataset should be split in.
-            :param path: Path where intermediate results are saved.
-            """
-            train_data = DataLoader(data, batch_size=self.batch_size, shuffle=True)
+        for _ in tqdm(range(self.epochs), desc='Epoch Student'):
+            for _, [x, labels] in enumerate(tqdm(train_data, desc='Batch')):
+                x, labels = x.to(self.device), labels.to(self.device)
 
-            for epoch in tqdm(range(self.epochs), desc='Epoch Student'):
-                for step, [x, labels] in enumerate(tqdm(train_data, desc='Batch')):
-                    x, labels = x.to(self.device), labels.to(self.device)
+                self.optimizer.zero_grad()
 
-                    self.optimizer.zero_grad()
+                proportion_beta: int = int(beta * len(x))
+                x_o, x_t = x[0:proportion_beta], x[proportion_beta::]
+                labels_o, labels_t = labels[0:proportion_beta],\
+                    labels[proportion_beta::]
 
-                    proportion_beta: int = int(beta * len(x))
-                    x_o, x_t = x[0:proportion_beta], x[proportion_beta::]
-                    labels_o, labels_t = labels[0:proportion_beta], labels[proportion_beta::]
+                # TODO Useful or float?
+                x_o, x_t = x[0:proportion_beta].type(torch.FloatTensor),\
+                    x[proportion_beta::].type(torch.FloatTensor)
+                labels_o, labels_t = labels_o.type(torch.FloatTensor),\
+                    labels_t.type(torch.FloatTensor)
 
-                    # TODO Useful or float?
-                    x_o, x_t = x[0:proportion_beta].type(torch.FloatTensor), x[proportion_beta::].type(torch.FloatTensor)
-                    labels_o, labels_t = labels_o.type(torch.FloatTensor), labels_t.type(torch.FloatTensor)
+                prediction_student_t = self.module(x_t)
+                prediction_student_o = self.module(x_o)
 
-                    prediction_student_t = self.module(x_t)
-                    prediction_student_o = self.module(x_o)
+                prediction_teacher_t = teacher(x_t)
 
-                    prediction_teacher_t = teacher(x_t)
+                loss = self.loss(
+                    prediction_student_t,
+                    prediction_student_o,
+                    prediction_teacher_t,
+                    labels_o)
 
-                    loss = self.loss(
-                        prediction_student_t,
-                        prediction_student_o,
-                        prediction_teacher_t,
-                        labels_o)
-        
-                    loss.backward()
-                    self.optimizer.step()
-
+                loss.backward()
+                self.optimizer.step()
