@@ -1,10 +1,11 @@
 
 from torch import nn
 
+
 class Students:
 
     @staticmethod
-    def get_debug_teacher():
+    def get_debug_student():
         return nn.Sequential(
           nn.Flatten(1, -1),
           nn.Linear(125, 1),

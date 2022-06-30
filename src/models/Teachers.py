@@ -1,6 +1,7 @@
 
 from torch import nn
 
+
 class Teachers:
 
     @staticmethod

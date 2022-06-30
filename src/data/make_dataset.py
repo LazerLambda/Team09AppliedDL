@@ -30,6 +30,7 @@ class DebugDataset:
     def rm_csv(self) -> None:
         os.remove(self.path)
 
+
 # if __name__ == "__main__":
 # test  = DebugDataset(10, 5)
 # test.create_debug_dataset()

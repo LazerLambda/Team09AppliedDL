@@ -1,12 +1,12 @@
 import torch
-from torch import nn
-from torch import optim
+from torch import nn, optim
 from torch.utils.data import Dataset
 from tqdm import tqdm
 
+from distillation.Train import Train
+from loss.DistillationLoss import DistillationLoss
 from loss.ImbalancedLoss import ImbalancedLoss
-from loss.DistillationLoss import Distillation_loss
-from Train import Train
+
 
 class Distillation:
     """Distillation Class.
@@ -71,7 +71,7 @@ class Distillation:
 
         # TODO rm device here
         imb_loss: ImbalancedLoss = ImbalancedLoss(torch.device("cuda" if torch.cuda.is_available() else "cpu"), p=0.5)
-        dist_loss: Distillation_loss = Distillation_loss(alpha=0.5) 
+        dist_loss: DistillationLoss = DistillationLoss(alpha=0.5) 
         self.trainer_teacher: Train = Train(
             teacher,
             teacher_optim,
