@@ -1,8 +1,14 @@
 """Module for Distillation."""
 
 import torch
+from ignite.contrib.metrics import *
+from ignite.contrib.metrics.regression import *
+from ignite.engine import *
+from ignite.handlers import *
+from ignite.metrics import *
+from ignite.utils import *
 from torch import nn, optim
-from torch.utils.data import Dataset
+from torch.utils.data import DataLoader, Dataset
 from tqdm import tqdm
 
 from distillation.Train import Train
@@ -38,7 +44,8 @@ class Distillation:
             teacher: nn.Module,
             teacher_optim: optim.Optimizer,
             teacher_lr: float,
-            data: Dataset,
+            data_train: Dataset,
+            data_test: Dataset,
             batch_size: int,
             student_epochs: int,
             teacher_epochs: int,
@@ -46,6 +53,7 @@ class Distillation:
             alpha: float,
             beta: float,
             t: float,
+            device: torch.device = None,
             *args,
             **kwargs):
         """Initialize Distillation Class.
@@ -57,7 +65,8 @@ class Distillation:
         :param teacher: nn.Module,
         :param teacher_optim: optim.Optimizer,
         :param teacher_lr: float,
-        :param data: Dataset,
+        :param data_train: Train-Dataset,
+        :param data_test: Test-Dataset,
         :param batch_size: int,
         :param student_epochs: int,
         :param teacher_epochs: int,
@@ -65,6 +74,7 @@ class Distillation:
         :param alpha: float,
         :param beta: float,
         :param t: float,
+        :param device: Device training should be computed on.
         :param *args: Additional params.
         :param **kwargs:  Additional params.
         """
@@ -81,8 +91,10 @@ class Distillation:
             "ERROR: `teacher_lr` must be in domain of [0,1]."
         # assert isinstance(teacher_optim, optim.Optimizer),\
         #     "ERROR: `teacher_optim` must be of class optim.Optimizer."
-        assert isinstance(data, torch.utils.data.Dataset),\
-            "ERROR: `data` must be of class utils.data.Dataset."
+        assert isinstance(data_train, torch.utils.data.Dataset),\
+            "ERROR: `data_train` must be of class utils.data.Dataset."
+        assert isinstance(data_test, torch.utils.data.Dataset),\
+            "ERROR: `data_test` must be of class utils.data.Dataset."
         assert batch_size > 0,\
             "ERROR: `batch_size` must be larger than 0."
         assert teacher_epochs > 0,\
@@ -95,15 +107,23 @@ class Distillation:
             "ERROR: `beta` must be in domain of [0,1]."
         assert t > 0,\
             "ERROR: `t` must be larger than 0."
+        # TODO check device
 
         self.student: nn.Module = student
         self.teacher: nn.Module = teacher
-        self.data: Dataset = data
+        self.data_train: Dataset = data_train
+        self.data_test: Dataset = data_test
+        self.batch_size: int = batch_size
         # self.teacher_epochs: int = teacher_epochs
         self.meta_epochs: int = meta_epochs
         self.alpha: float = alpha
         self.beta: float = beta
         self.t: float = t
+
+        if device is None:
+            self.device: torch.Device =\
+                torch.device(
+                    "cuda" if torch.cuda.is_available() else "cpu")
 
         # TODO rm device here
         imb_loss: ImbalancedLoss = ImbalancedLoss(
@@ -117,14 +137,110 @@ class Distillation:
             batch_size,
             teacher_epochs,
             imb_loss,
-            teacher_lr)
+            teacher_lr,
+            self.device)
         self.trainer_student: Train = Train(
             student,
             student_optim,
             batch_size,
             student_epochs,
             dist_loss,
-            student_lr)
+            student_lr,
+            self.device)
+
+    def eval_models(self, data: Dataset, desc: str = "") -> tuple:
+        """Evaluate Student and Teacher Model.
+
+        :param data: Dataset model will be evaluated on.
+        :param desc: Description string for tqdm.
+
+        :return: Tuple with metrics for teacher and student (teacher first).
+        """
+        self.teacher.eval()
+        self.student.eval()
+
+        eval_collector_teacher_pred: list = []
+        eval_collector_teacher_labl: list = []
+        eval_collector_student_pred: list = []
+        eval_collector_student_labl: list = []
+
+        dataloader = DataLoader(data, batch_size=self.batch_size, shuffle=True)
+        for _, [x, y] in enumerate(tqdm(dataloader, desc=f'Evaluate-{desc}')):
+            x = x.to(self.device).float()
+
+            with torch.no_grad():
+                pred_teacher = self.teacher(x)
+                pred_student = self.student(x)
+
+                eval_collector_teacher_pred.append(pred_teacher.cpu())
+                eval_collector_teacher_labl.append(y)
+                eval_collector_student_pred.append(pred_student.cpu())
+                eval_collector_student_labl.append(y)
+
+        self.teacher.train()
+        self.student.train()
+
+        pred_teacher: torch.Tensor = torch.concat(eval_collector_teacher_pred)
+        pred_student: torch.Tensor = torch.concat(eval_collector_student_pred)
+
+        labl_teacher: torch.Tensor = torch.concat(eval_collector_teacher_labl)
+        labl_student: torch.Tensor = torch.concat(eval_collector_student_labl)
+
+        return self.eval(
+            pred_teacher,
+            labl_teacher,
+            pred_student,
+            labl_student)
+
+    # TODO: @staticmethod ?
+    def eval(
+            self,
+            y_teacher: torch.Tensor,
+            labl_teacher: torch.Tensor,
+            y_student: torch.Tensor,
+            labl_student: torch.Tensor) -> tuple:
+        """Evaluate Predicted Labels.
+        
+        :param y_teacher: True labels for teacher.
+        :param labl_teacher: Predicted labels for teacher.
+        :param y_student: True labels for student.
+        :param labl_student: Predicted labels for student.
+
+        :return: AUC for teacher and student (teacher first).
+        """
+        default_evaluator = Engine(lambda _, batch: batch)
+        roc_auc = ROC_AUC()
+        roc_auc.attach(default_evaluator, 'roc_auc')
+
+        state_teacher = default_evaluator.run([[y_teacher, labl_teacher]])
+        state_student = default_evaluator.run([[y_student, labl_student]])
+
+        return state_teacher.metrics['roc_auc'],\
+            state_student.metrics['roc_auc']
+
+    def print_table(
+            self,
+            meta_epoch: int,
+            auc_teacher_train: float,
+            auc_teacher_test: float,
+            auc_student_train: float,
+            auc_student_test: float) -> None:
+        """Print Results.
+        
+        :param meta_epoch: Meta-epoch.
+        :param auc_teacher_train: AUC for teacher on training data.
+        :param auc_teacher_test: AUC for teacher on test data.
+        :param auc_student_train: AUC for student on training data.
+        :param auc_student_test: AUC for student on test data.
+        """
+        info_line: str = (
+            f"Meta Epoch: {meta_epoch:.3f}\t "
+            f"AUC Tchr. Trn.: {auc_teacher_train:.3f}\t "
+            f"AUC Tchr. Tst.: {auc_teacher_test:.3f}\t "
+            f"AUC Stdnt. Trn.: {auc_student_train:.3f}\t "
+            f"AUC Stdnt. Tst.: {auc_student_test:.3f}"
+        )
+        print(info_line)
 
     def train_loop(self, alpha, beta) -> None:
         """Train Teacher and Student.
@@ -132,13 +248,29 @@ class Distillation:
         :param alpha: Alpha parameter for distillation-loss function.
         :param beta: Parametr for transfer-data-original-data split.
         """
-        for _ in tqdm(
+        auc_list: list = []
+        for meta_epoch in tqdm(
                 range(self.meta_epochs), desc='Meta-Epoch'):
 
-            self.trainer_teacher.train_teacher(self.data)
+            self.trainer_teacher.train_teacher(self.data_train)
 
             self.trainer_student.train_student(
-                self.data,
+                self.data_train,
                 self.teacher,
                 alpha,
                 beta)
+
+            auc_student_train, auc_teacher_train = self.eval_models(
+                self.data_train, desc="Teacher")
+            auc_student_test, auc_teacher_test = self.eval_models(
+                self.data_test, desc="Student")
+
+            auc_list.append((
+                meta_epoch,
+                auc_teacher_train,
+                auc_teacher_test,
+                auc_student_train,
+                auc_student_test))
+
+        for e in auc_list:
+            self.print_table(e[0], e[1], e[2], e[3], e[4])

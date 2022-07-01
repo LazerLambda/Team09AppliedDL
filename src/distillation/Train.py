@@ -26,7 +26,7 @@ class Train:
             save_at: int = -1,
             title: str = None,
             cont_train: bool = False,
-            device: torch.device = None):
+            device: torch.device = None):  #TODO remove
         """Initialize Class.
 
         Set hyperparameters to class variables, check validity passed arguments
@@ -66,7 +66,7 @@ class Train:
         self.title: str = title
         self.cont_train: bool = cont_train
 
-        if device is None:
+        if device is None:  # TODO: remove
             self.device: torch.Device =\
                 torch.device(
                     "cuda" if torch.cuda.is_available() else "cpu")
