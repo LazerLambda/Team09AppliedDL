@@ -26,7 +26,7 @@ class Train:
             save_at: int = -1,
             title: str = None,
             cont_train: bool = False,
-            device: torch.device = None):  #TODO remove
+            device: torch.device = None):  # TODO remove
         """Initialize Class.
 
         Set hyperparameters to class variables, check validity passed arguments

@@ -13,7 +13,7 @@ def main():
     teacher: any = Teachers.get_debug_teacher()
     student: any = Students.get_debug_student()
 
-    test_data: any = DebugDataset(20, 5)
+    test_data: any = DebugDataset(40, 5)
     test_data.create_debug_dataset()
     data_train: any = AminoDS('TEST_DATA.gzip', True)
     data_test: any = AminoDS('TEST_DATA.gzip', False)
@@ -28,9 +28,9 @@ def main():
         data_train,
         data_test,
         batch_size=2,
-        student_epochs=2,
-        teacher_epochs=2,
-        meta_epochs=4,
+        student_epochs=1,
+        teacher_epochs=1,
+        meta_epochs=1,
         alpha=0.5,
         beta=0.5,
         t=3

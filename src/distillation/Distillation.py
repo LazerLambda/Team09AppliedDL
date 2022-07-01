@@ -1,12 +1,8 @@
 """Module for Distillation."""
 
 import torch
-from ignite.contrib.metrics import *
-from ignite.contrib.metrics.regression import *
-from ignite.engine import *
-from ignite.handlers import *
-from ignite.metrics import *
-from ignite.utils import *
+from ignite.contrib.metrics import ROC_AUC
+from ignite.engine.engine import Engine
 from torch import nn, optim
 from torch.utils.data import DataLoader, Dataset
 from tqdm import tqdm
@@ -169,12 +165,12 @@ class Distillation:
             x = x.to(self.device).float()
 
             with torch.no_grad():
-                pred_teacher = self.teacher(x)
-                pred_student = self.student(x)
+                pred_teacher_tmp = self.teacher(x)
+                pred_student_tmp = self.student(x)
 
-                eval_collector_teacher_pred.append(pred_teacher.cpu())
+                eval_collector_teacher_pred.append(pred_teacher_tmp.cpu())
                 eval_collector_teacher_labl.append(y)
-                eval_collector_student_pred.append(pred_student.cpu())
+                eval_collector_student_pred.append(pred_student_tmp.cpu())
                 eval_collector_student_labl.append(y)
 
         self.teacher.train()
@@ -200,7 +196,7 @@ class Distillation:
             y_student: torch.Tensor,
             labl_student: torch.Tensor) -> tuple:
         """Evaluate Predicted Labels.
-        
+
         :param y_teacher: True labels for teacher.
         :param labl_teacher: Predicted labels for teacher.
         :param y_student: True labels for student.
@@ -226,7 +222,7 @@ class Distillation:
             auc_student_train: float,
             auc_student_test: float) -> None:
         """Print Results.
-        
+
         :param meta_epoch: Meta-epoch.
         :param auc_teacher_train: AUC for teacher on training data.
         :param auc_teacher_test: AUC for teacher on test data.
