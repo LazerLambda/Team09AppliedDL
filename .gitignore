@@ -88,6 +88,10 @@ target/
 # Mypy cache
 .mypy_cache/
 
+# MLflow
+/mlruns/
+/outputs/
+
 # Data
 *.csv
 *.gzip
