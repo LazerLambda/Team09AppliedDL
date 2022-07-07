@@ -17,8 +17,8 @@ def main():
 
     test_data: any = DebugDataset(40, 5)
     test_data.create_debug_dataset()
-    data_train: any = AminoDS('TEST_DATA.gzip', True)
-    data_test: any = AminoDS('TEST_DATA.gzip', False)
+    data_train: any = AminoDS('TEST_DATA.gzip', dataset_type="train")
+    data_test: any = AminoDS('TEST_DATA.gzip', dataset_type="test")
 
     distil = Distillation(
         student,
