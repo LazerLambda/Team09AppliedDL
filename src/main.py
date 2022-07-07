@@ -28,8 +28,8 @@ def main():
     param: dict = create_config(args.config_exp)
 
     # Init Logger
-    logger: Logger = Logger()
-    logger.log_params(param)
+    logger: Logger = Logger(param)
+    logger.log_params()
 
     # Init Models
     teacher: torch.nn.Module = Teachers.get_transformer()

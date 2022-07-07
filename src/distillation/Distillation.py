@@ -72,6 +72,7 @@ class Distillation:
         :param alpha: float,
         :param beta: float,
         :param t: float,
+        :param logger: Logger class for MLflow.
         :param device: Device training should be computed on.
         :param *args: Additional params.
         :param **kwargs:  Additional params.
@@ -106,6 +107,8 @@ class Distillation:
         assert t > 0,\
             "ERROR: `t` must be larger than 0."
         # TODO check device
+        assert isinstance(logger, Logger),\
+            "ERROR: `logger` must be of class Logger."
 
         self.student: nn.Module = student
         self.teacher: nn.Module = teacher
