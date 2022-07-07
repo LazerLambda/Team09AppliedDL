@@ -8,12 +8,14 @@ from ConfigReader import create_config
 from data.make_dataset import DebugDataset
 from Dataset import AminoDS
 from distillation.Distillation import Distillation
+from Logger import Logger
 from models.Students import Students
 from models.Teachers import Teachers
 
 
 def main():
     """Start program."""
+    # Read Hyperparam.yaml
     flags = argparse.ArgumentParser(description='knowledge distillation')
     flags.add_argument(
         '--config_env',
@@ -25,6 +27,11 @@ def main():
     args = flags.parse_args()
     param: dict = create_config(args.config_exp)
 
+    # Init Logger
+    logger: Logger = Logger()
+    logger.log_params(param)
+
+    # Init Models
     teacher: torch.nn.Module = Teachers.get_transformer()
     student: torch.nn.Module = Students.get_debug_student()
 
@@ -48,6 +55,7 @@ def main():
         meta_epochs=param['meta_epochs'],
         alpha=param['alpha'],
         beta=param['beta'],
+        logger=logger,
         t=param['t']
     )
 
