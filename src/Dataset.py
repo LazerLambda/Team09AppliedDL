@@ -16,31 +16,53 @@ class AminoDS(Dataset):
     def __init__(
             self,
             path: str,
-            train: bool,
-            proportion: float = 0.8,
+            dataset_type: str,
+            proportion_train: float = 0.5,
+            proportion_test: float = 0.2,
+            proportion_hyperparam: float = 0.15,
             debug: bool = False):
         """Initialize Class.
 
         :param path: Path to dataset.
-        :param train: Parameter for test train split.
-        :param proportion: Proportion of tain-test split.
+        :param dataset_type: Parameter for train ("train"), test ("test"),
+            hyperparameter test ("hyperparam") and validation ("val") split.
+        :param proportion_train: Proportion size of split dataset train.
+        :param proportion_test: Proportion size of split dataset test.
+        :param proportion_hyperparam: Proportion size of split dataset
+            hyperparam. The remaining data will form the validation set.
         :param debug: Truncate dataset for debug purposes.
         """
-        assert isinstance(train, bool),\
-            "ERROR:`train` must be of type boolean."
-
         with gzip.open(path, 'rb') as f_in:
             with open('data.csv', 'wb') as f_out:
                 shutil.copyfileobj(f_in, f_out)
 
         df1: pd.DataFrame = pd.read_csv(r'data.csv')
+
+        # TODO delete head
         df1 = df1.head(n=10000) if debug else df1
 
-        train_len: int = int(proportion * len(df1)) - 1
-        if train:
-            df1 = df1[0:train_len]
+        trn_len: int = int(proportion_train * len(df1)) - 1
+        tst_len: int = int(proportion_test * len(df1)) - 1
+        hyperparam_len: int = int(proportion_hyperparam * len(df1)) - 1
+
+        if dataset_type == "train":
+            df1 = df1[0:trn_len]
+
+        elif dataset_type == "test":
+            df1 = df1[
+                (trn_len + 1):(trn_len + tst_len)].reset_index()
+
+        elif dataset_type == "hyperparam":
+            df1 = df1[
+                (trn_len + tst_len + 1):(trn_len + tst_len + hyperparam_len)]\
+                .reset_index()
+
+        elif dataset_type == "val":
+            df1 = df1[
+                (trn_len + tst_len + hyperparam_len + 1)::].reset_index()
+
         else:
-            df1 = df1[train_len::].reset_index()
+            raise ValueError("dataset_type is not correctly specified.")
 
         # define input string
         data: pd.DataFrame = df1['window']
