@@ -1,4 +1,5 @@
 """Entry point for Debugging."""
+import torch
 from torch import optim
 
 from data.make_dataset import DebugDataset
@@ -10,8 +11,9 @@ from models.Teachers import Teachers
 
 def main():
     """Start program."""
-    teacher: any = Teachers.get_debug_teacher()
-    student: any = Students.get_debug_student()
+    # teacher: any = Teachers.get_debug_teacher()
+    teacher: torch.nn.Module = Teachers.get_transformer()
+    student: torch.nn.Module = Students.get_debug_student()
 
     test_data: any = DebugDataset(40, 5)
     test_data.create_debug_dataset()

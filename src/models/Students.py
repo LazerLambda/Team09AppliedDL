@@ -6,7 +6,7 @@ class Students:
     """Container Class for Student-Models."""
 
     @staticmethod
-    def get_debug_student():
+    def get_debug_student() -> nn.Module:
         """Return simple Linear Modl.
 
         :return: Simple Model.
@@ -18,7 +18,7 @@ class Students:
         )
 
     @staticmethod
-    def get_mlp_1():
+    def get_mlp_1() -> nn.Module:
         """Return MLP 1.
 
         :return: Simple MLP 1.
