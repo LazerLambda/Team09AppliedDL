@@ -95,6 +95,3 @@ target/
 # Data
 *.csv
 *.gzip
-
-# Config
-*.yaml
