@@ -8,6 +8,7 @@ from torch.utils.data import DataLoader, Dataset
 from tqdm import tqdm
 
 from distillation.Train import Train
+from Logger import Logger
 from loss.DistillationLoss import DistillationLoss
 from loss.ImbalancedLoss import ImbalancedLoss
 
@@ -49,6 +50,7 @@ class Distillation:
             alpha: float,
             beta: float,
             t: float,
+            logger: Logger = None,
             device: torch.device = None,
             *args,
             **kwargs):
@@ -70,6 +72,7 @@ class Distillation:
         :param alpha: float,
         :param beta: float,
         :param t: float,
+        :param logger: Logger class for MLflow.
         :param device: Device training should be computed on.
         :param *args: Additional params.
         :param **kwargs:  Additional params.
@@ -104,6 +107,8 @@ class Distillation:
         assert t > 0,\
             "ERROR: `t` must be larger than 0."
         # TODO check device
+        assert isinstance(logger, Logger),\
+            "ERROR: `logger` must be of class Logger."
 
         self.student: nn.Module = student
         self.teacher: nn.Module = teacher
@@ -115,6 +120,7 @@ class Distillation:
         self.alpha: float = alpha
         self.beta: float = beta
         self.t: float = t
+        self.logger: Logger = logger
 
         if device is None:
             self.device: torch.Device =\
@@ -267,6 +273,13 @@ class Distillation:
                 auc_teacher_test,
                 auc_student_train,
                 auc_student_test))
+
+            self.logger.log_metrics({
+                "AUC Tchr. Trn.": auc_teacher_train,
+                "AUC Tchr. Tst.": auc_teacher_test,
+                "AUC Stdnt. Trn.": auc_student_train,
+                "AUC Stdnt. Tst.": auc_student_test
+            })
 
         for e in auc_list:
             self.print_table(e[0], e[1], e[2], e[3], e[4])
