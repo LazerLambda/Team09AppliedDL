@@ -14,5 +14,7 @@ pandas
 python-dotenv>=0.5.1
 pytest
 pytorch-ignite
+sklearn
 torch
 tqdm
+wandb

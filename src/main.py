@@ -8,7 +8,7 @@ from ConfigReader import create_config
 from data.make_dataset import DebugDataset
 from Dataset import AminoDS
 from distillation.Distillation import Distillation
-from Logger import Logger
+from Logger import Logger, MLFlowLogger, WandBLogger
 from models.Students import Students
 from models.Teachers import Teachers
 
@@ -17,18 +17,27 @@ def main():
     """Start program."""
     # Read Hyperparam.yaml
     flags = argparse.ArgumentParser(description='knowledge distillation')
-    flags.add_argument(
+    flags.add_argument(  # TODO: Still in use
         '--config_env',
         help='Location of path config file')
     flags.add_argument(
         '--config_exp',
-        help='Location of experiments config file')
+        help='Location of experiments config file',
+        required=True)
+    flags.add_argument(
+        '--path',
+        help='Path to data',
+        required=True)
+    flags.add_argument(
+        '--wandb',
+        action='store_true',
+        default=False)
 
     args = flags.parse_args()
     param: dict = create_config(args.config_exp)
 
     # Init Logger
-    logger: Logger = Logger(param)
+    logger: Logger = WandBLogger(param) if args.wandb else MLFlowLogger(param)
     logger.log_params()
 
     # Init Models
@@ -37,8 +46,8 @@ def main():
 
     test_data: any = DebugDataset(40, 5)
     test_data.create_debug_dataset()
-    data_train: any = AminoDS('TEST_DATA.gzip', dataset_type="train")
-    data_test: any = AminoDS('TEST_DATA.gzip', dataset_type="test")
+    data_train: any = AminoDS(args.path, dataset_type="train")
+    data_test: any = AminoDS(args.path, dataset_type="test")
 
     distil = Distillation(
         student=student,
