@@ -4,7 +4,7 @@ teacher_lr: 0.0001
 batch_size: 2
 student_epochs: 1
 teacher_epochs: 1
-meta_epochs: 1
+meta_epochs: 5
 alpha: 0.5
 beta: 0.5
 t: 3
@@ -18,5 +18,8 @@ test_split: 0.2
 
 # teacher_epochs
 teacher: 'transformer'
+
+# WandB Proj Name
+proj_name: "HyperParamSearch"
 
 

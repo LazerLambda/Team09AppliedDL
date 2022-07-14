@@ -92,6 +92,12 @@ target/
 /mlruns/
 /outputs/
 
+# WandB
+wandb/
+
 # Data
 *.csv
 *.gzip
+
+# Virtual Environment
+.venv/
