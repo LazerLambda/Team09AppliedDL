@@ -114,7 +114,7 @@ class Train:
             self,
             data: Dataset,
             teacher: nn.Module,
-            alpha: float, #  TODO rm
+            alpha: float,  # TODO rm
             beta: float,
             path: str = None):
         """Train Module.

@@ -17,7 +17,7 @@ def main():
     """Start program."""
     # Read Hyperparam.yaml
     flags = argparse.ArgumentParser(description='knowledge distillation')
-    flags.add_argument( #  TODO: Still in use
+    flags.add_argument(  # TODO: Still in use
         '--config_env',
         help='Location of path config file')
     flags.add_argument(
@@ -32,7 +32,6 @@ def main():
         '--wandb',
         action='store_true',
         default=False)
-    
 
     args = flags.parse_args()
     param: dict = create_config(args.config_exp)

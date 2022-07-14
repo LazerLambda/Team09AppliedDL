@@ -1,10 +1,13 @@
 """Logger Class."""
 
 from abc import ABC, abstractmethod
+
 import mlflow
+
 import wandb
 
-class Logger:
+
+class Logger(ABC):
     """Logger Class.
 
     :method __init__: Initialize class.
@@ -80,7 +83,6 @@ class WandBLogger(Logger):
         :param params: Dictionary for hyperparameters to be saved.
         """
         self.params: dict = params
-        
 
     def log_params(self) -> None:
         """Log Hyperparameters."""
