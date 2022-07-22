@@ -4,6 +4,7 @@
 # external requirements
 click
 EasyDict
+git+https://github.com/e-dorigatti/hyperband-snakemake
 Sphinx
 coverage
 awscli

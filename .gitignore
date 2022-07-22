@@ -101,3 +101,6 @@ wandb/
 
 # Virtual Environment
 .venv/
+
+# Hyperband-Snakemake
+default_config/

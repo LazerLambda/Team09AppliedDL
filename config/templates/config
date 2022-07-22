@@ -1,0 +1,25 @@
+# distillation
+student_lr: 0.0001
+teacher_lr: 0.0001
+batch_size: 2
+student_epochs: {{ [1, 2, 3, 4 ] | random }}
+teacher_epochs: {{ [1, 2, 3, 4 ] | random }}
+meta_epochs: 5
+alpha: {{ [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8 ] | random }}
+beta: {{ [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8 ] | random }}
+t: 3
+
+# data set split
+train_split: 0.4
+early_stopping_split: 0.2
+val_split: 0.2
+test_split: 0.2
+
+
+# teacher_epochs
+teacher: 'transformer'
+
+# WandB Proj Name
+proj_name: "HyperParamSearch"
+
+

@@ -1,0 +1,86 @@
+config['base_dir'] = "{{ base_dir }}"
+
+
+def promote_best(input, output, new_epochs):
+    '''
+    find the len(output) best configurations in the input, and moves
+    them to the given output.
+
+    input is a list of paths pointing to the result files, while output
+    is a list of paths pointing to the new configuration files
+    '''
+
+    import os, shutil, math
+
+    scores = []
+    for i, fname in enumerate(input):
+        with open(fname) as f:
+            score = float(f.read())
+            if math.isfinite(score):
+                scores.append((fname, score))
+
+    if not scores:
+        raise RuntimeError('all configurations failed')
+
+    scores.sort(key=lambda x: x[1])
+
+    print('Promoted configuration and their scores')
+    for (config, score), outconf in zip(scores, output):
+        print('    %.4f - %s' % (score, config))
+        indir, _ = os.path.split(config)
+        shutil.copy(os.path.join(indir, 'config'), outconf)
+
+rule all:
+    input:
+        expand("{d}/config", d=config['base_dir'])
+
+
+# check results of last stage of each bracket,
+# and copy absolute best to base directory
+rule find_overall_best:
+    input:
+{% for bracket in brackets %}
+        expand("{d}/bracket-{{ bracket.id }}/stage-{{ bracket.max_stage - 1 }}/config-{c}/result",
+               d=config['base_dir'], c=range({{ bracket.num_best }})),
+{% endfor %}
+    output:
+        expand("{d}/config", d=config['base_dir'])
+    run:
+        promote_best(input, output, new_epochs=None)
+
+{% for bracket in brackets %}
+{% for stage in bracket.stages  %}
+# -----------------------------------------------------------------------------------------------------------
+# ---  Begin Stage {{ stage.id }} of Bracket {{ bracket.id }}
+# -----------------------------------------------------------------------------------------------------------
+
+{% for config in range(stage.configs) %}
+
+{# you can modify this rule to change how Snakemake runs the launch script #}
+rule run_bracket_{{ bracket.id }}_stage_{{ stage.id }}_config_{{ config }}:
+    input:
+         expand("{d}/bracket-{{ bracket.id }}/stage-{{ stage.id }}/config-{{ config }}/config",
+                d=config['base_dir'])
+    output:
+         expand("{d}/bracket-{{ bracket.id }}/stage-{{ stage.id }}/config-{{ config }}/result",
+                d=config['base_dir'])
+    shell:
+         expand("bash {d}/run.sh {d}/bracket-{{ bracket.id }}/stage-{{ stage.id }}/config-{{ config }} {b}",
+                d=config['base_dir'], b={{ stage.budget }})[0]
+{% endfor %}
+
+{% if stage.promote_count > 0 %}
+# promote best configurations to next stage
+rule promote_bracket_{{ bracket.id }}_stage_{{ stage.id }}:
+    input:
+        expand("{d}/bracket-{{ bracket.id }}/stage-{{ stage.id }}/config-{c}/result",
+                c=range({{ stage.configs }}), d=config['base_dir'])
+    output:
+        expand("{d}/bracket-{{ bracket.id }}/stage-{{ stage.id + 1 }}/config-{c}/config",
+                c=range({{ stage.promote_count }}), d=config['base_dir'])
+    run:
+        promote_best(input, output, new_epochs={{ stage.promote_epochs }})
+
+{% endif %}
+{% endfor %}
+{% endfor %}
