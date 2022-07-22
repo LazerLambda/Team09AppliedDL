@@ -1,7 +1,61 @@
 Group09
 ==============================
 
-tba
+# Sequence-level Knowledge Distillation
+
+---
+
+## Introduction
+
+In this Git repository a new way of knowlegde distillation for data with sequence-level input and binary output on an inbalanced dataset was implemented. This work was inspired by the papers [1] and [2].
+
+## Concept 
+
+The idea behind this particullar distillation approach is for the student model to learn the distribution of the teacher model whilst learning from the original data itself. This is done using an online learning approach (teacher and student are trained simultaneously).
+
+
+## Methodology
+
+In order for the student model to learn from the teacher model a combined loss for training was used. The first part of the loss contains the original data and the loss for unlabled positive data (implemented in the loss class, the algorithm is discribed in [3]). The second part is a cross-entropy loss on data labled by the teacher model. These two losses are combined in a convex combination with the hyperparameter $\alpha \in (0,1)$. <br>
+
+With the above discribed loss the student model is trained. The teacher model is trained using the loss for unlabled positive data. 
+
+## Algorithm
+
+**Input:**  <br>
+           training data (subset of original data); <br>
+           hyperparameters for loss: $\alpha \in (0,1)$, $\beta \in (0,1)$; <br>
+           hyperparameters for epochs: meta_epoch, teacher_epoch, student_epoch; <br>
+           models: student model **S**, teacher model **T** (both untrained) <br>
+           
+**Output:**  <br>
+           trained models **S** and **T**
+
+1. **For** each meta_epoch **do**:
+2. > **For** each teacher_epoch **do**: 
+3. >> Train teacher model with training data
+3. > **For** each student_epoch **do**:
+4. >> Shuffle data and take a batch for training iteration.
+5. >> Split batch into two disjoint data sets $data_s$ and $data_t$ with $n_{data_s} = \beta * n_{data}$ and $n_{data_t} = (1-\beta) * n_{data}$
+6. >> Make predictions with **T** for $data_t$
+7. >> Train **S** with both data sets (use predictions from **T** for $data_t$ and true labels for $data_s$) using a combined loss weighted with $\alpha$ for $L_t$ and $(1- \alpha)$ for $L_s$
+8. Save **S** and **T**
+
+
+## Code Structure
+
+In the folder src one can find the folders distillation, loss, models and visualization. <br>
+All losses are implemented in the folder loss. <br>
+The training and the distillation algorithm is located in the folder distillation. <br>
+The models used for this work can be found in the folder models. <br>
+Results and graphics can be found in the folder visualization.
+
+
+
+## References
+[1] Geoffrey Hinton, Oriol Vinyals, Jeff Dean, 2015. *Distilling the Knowledge in a Neural Network*. https://arxiv.org/abs/1503.02531 <br>
+[2] Jianping Gou, Baosheng Yu, Stephen J. Maybank, Dacheng Tao, 2021. *Knowledge Distillation: A Survey*. https://arxiv.org/abs/2006.05525v7 <br>
+[3] Guangxin Su, Weitong Chen, Miao Xu, 2021. *Positive-Unlabeled Learning from Imbalanced Data*. https://www.ijcai.org/proceedings/2021/412 <br>
 
 Project Organization
 ------------
