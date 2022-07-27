@@ -89,24 +89,26 @@ Project Organization
     ├── src                <- Source code for use in this project.
     │   ├── __init__.py    <- Makes src a Python module
     │   │
-    │   ├── data           <- Scripts to download or generate data
+    │   ├── data           <- Scripts to generate random test data
     │   │   └── make_dataset.py
     │   │
-    │   ├── features       <- Scripts to turn raw data into features for modeling
-    │   │   └── build_features.py
+    │   ├── distillation       <- Script for the distillation class with evaluation and train loop
+    │   │   └── Distillation.py
     │   │
-    │   ├── models         <- Scripts to train models and then use trained models to make
-    │   │   │                 predictions
-    │   │   ├── predict_model.py
-    │   │   └── train_model.py
+    │   ├── models             <- Scripts for teacher and student models
+    │   │   ├── Students.py
+    │   │   ├── Teachers.py
     │   │
-    │   └── visualization  <- Scripts to create exploratory and results oriented visualizations
-    │       └── visualize.py
-    ├── test
-    │   ├── __init__.py    <- Makes src a Python module
-    │   └── test_mock.py   <- Mock Test, further tests can be added
-    │
-    └── tox.ini            <- tox file with settings for running tox; see tox.readthedocs.io
+    │   └── visualization      <- Scripts to create exploratory and results oriented visualizations
+    │   │    └── visualize.py
+    │   ├── ConfigReader.py    <- Script to read configurations
+    │   │
+    │   ├── Dataset.py         <- Script for data preparation (read in and one hot encoding of the original dataset)
+    │   │
+    │   ├── Logger.py          <- Script for including mlflow and wandb
+    │   │
+    │   │
+    │   └── main.py            <- Launch script
 
 
 --------
