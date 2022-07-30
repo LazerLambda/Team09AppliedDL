@@ -129,6 +129,9 @@ class ImbalancedLoss:
 
         :return: Loss for batch.
         """
+        assert len(predictions.shape) == 1
+        assert len(labels.shape) == 1
+
         pred_p = predictions[labels == 1].to(self.device)
         pred_u = predictions[labels != 1].to(self.device)
 

@@ -94,7 +94,8 @@ class Train:
                 self.optimizer.zero_grad()
                 x = x.float()
                 prediction = self.module(x)
-                loss = self.loss(prediction, y)
+                loss = self.loss(prediction.squeeze(1), y)
+                # TODO: Fix dimension
                 loss.backward()
                 self.optimizer.step()
 
@@ -156,8 +157,8 @@ class Train:
 
                 loss = self.loss(
                     prediction_student_t,
-                    prediction_student_o,
-                    prediction_teacher_t,
+                    prediction_student_o.squeeze(1),
+                    prediction_teacher_t.squeeze(1),
                     labels_o)
 
                 loss.backward()
