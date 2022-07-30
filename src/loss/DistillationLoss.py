@@ -51,6 +51,6 @@ class DistillationLoss:
             labels_original)
         loss_teacher = self.cel(
             predictions_student_teacher,
-            labels_teacher)
+            labels_teacher.long())
 
         return self.alpha * loss_teacher + (1 - self.alpha) * loss_original
