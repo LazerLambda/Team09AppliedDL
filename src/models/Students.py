@@ -13,7 +13,7 @@ class Students:
         """
         return nn.Sequential(
             nn.Flatten(1, -1),
-            nn.Linear(125, 1),
+            nn.Linear(240, 1),
             nn.Sigmoid()
         )
 
