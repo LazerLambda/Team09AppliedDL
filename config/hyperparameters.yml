@@ -1,10 +1,10 @@
 # distillation
 student_lr: 0.0001
 teacher_lr: 0.0001
-batch_size: 2
+batch_size: 128
 student_epochs: 1
 teacher_epochs: 1
-meta_epochs: 5
+meta_epochs: 2
 alpha: 0.5
 beta: 0.5
 t: 3
