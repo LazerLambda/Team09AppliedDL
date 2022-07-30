@@ -64,10 +64,10 @@ def main(setup: dict = None):
     logger.log_params()
 
     # Init Models
-    teacher: torch.nn.Module = Teachers.get_transformer()
+    teacher: torch.nn.Module = Teachers.get_mlp1()
     student: torch.nn.Module = Students.get_debug_student()
 
-    test_data: typing.Any = DebugDataset(40, 5)
+    test_data: typing.Any = DebugDataset(40, 10)
     test_data.create_debug_dataset()
     data_train: typing.Any = AminoDS(data_path, dataset_type="train")
     data_test: typing.Any = AminoDS(data_path, dataset_type="test")

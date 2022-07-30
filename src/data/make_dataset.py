@@ -26,7 +26,7 @@ class DebugDataset:
         x: list = list(
             map(
                 lambda e: e.join(random.choices(
-                    'ABCDEFGHIKLMNOPQRSTUVWXYZ',
+                    'ABCDEFGHIKLMNOPQRSTUVWXY',
                     k=self.p)),
                 [''] * self.n))
         y: list = random.choices([0, 1], k=self.n)

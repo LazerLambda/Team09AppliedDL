@@ -13,9 +13,39 @@ class Teachers:
         """
         return nn.Sequential(
             nn.Flatten(1, -1),
-            nn.Linear(125, 48),
+            nn.Linear(240, 48),
             nn.ReLU(),
             nn.Linear(48, 1),
+            nn.Sigmoid()
+        )
+
+    @staticmethod
+    def get_mlp1() -> nn.Module:
+        """Return MLP 1.
+
+        :return: MLP model.
+        """
+        return nn.Sequential(
+            nn.Flatten(1, -1),
+            nn.Linear(240, 480),
+            nn.ReLU(),
+            nn.Linear(480, 480),
+            nn.ReLU(),
+            nn.Linear(480, 480),
+            nn.ReLU(),
+            nn.Linear(480, 480),
+            nn.ReLU(),
+            nn.Linear(480, 480),
+            nn.ReLU(),
+            nn.Linear(480, 480),
+            nn.ReLU(),
+            nn.Linear(480, 480),
+            nn.ReLU(),
+            nn.Linear(480, 480),
+            nn.ReLU(),
+            nn.Linear(480, 480),
+            nn.ReLU(),
+            nn.Linear(480, 1),
             nn.Sigmoid()
         )
 
