@@ -155,7 +155,7 @@ class Train:
                 prediction_student_t = self.module(x_t.to(self.device))
                 prediction_student_o = self.module(x_o.to(self.device))
 
-                prediction_teacher_t = teacher(x_t)
+                prediction_teacher_t = teacher(x_t.to(self.device))
 
                 loss = self.loss(
                     prediction_student_t,
