@@ -150,7 +150,6 @@ class Distillation:
             student_lr,
             self.device)
         self.default_evaluator: Engine = Engine(lambda _, batch: batch)
-        print(type(self.default_evaluator))
         roc_auc = ROC_AUC()
         roc_auc.attach(self.default_evaluator, 'roc_auc')
 
