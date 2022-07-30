@@ -149,76 +149,45 @@ class Distillation:
             dist_loss,
             student_lr,
             self.device)
+        self.default_evaluator: Engine = Engine(lambda _, batch: batch)
+        print(type(self.default_evaluator))
+        roc_auc = ROC_AUC()
+        roc_auc.attach(self.default_evaluator, 'roc_auc')
 
-    def eval_models(self, data: Dataset, desc: str = "") -> tuple:
+    def eval_model(
+            self, model: nn.Module,
+            data: Dataset,
+            desc: str = "") -> tuple:
         """Evaluate Student and Teacher Model.
 
+        :param model: Model to evaluate.
         :param data: Dataset model will be evaluated on.
         :param desc: Description string for tqdm.
 
-        :return: Tuple with metrics for teacher and student (teacher first).
+        :return: AUC of the provided model on the provided data.
         """
-        self.teacher.eval()
-        self.student.eval()
+        model.eval()
 
-        eval_collector_teacher_pred: list = []
-        eval_collector_teacher_labl: list = []
-        eval_collector_student_pred: list = []
-        eval_collector_student_labl: list = []
+        coll_pred: list = []
+        coll_labl: list = []
 
         dataloader = DataLoader(data, batch_size=self.batch_size, shuffle=True)
         for _, [x, y] in enumerate(tqdm(dataloader, desc=f'Evaluate-{desc}')):
             x = x.to(self.device).float()
 
             with torch.no_grad():
-                pred_teacher_tmp = self.teacher(x)
-                pred_student_tmp = self.student(x)
+                pred_tmp: torch.Tensor = model(x)
 
-                eval_collector_teacher_pred.append(pred_teacher_tmp.cpu())
-                eval_collector_teacher_labl.append(y)
-                eval_collector_student_pred.append(pred_student_tmp.cpu())
-                eval_collector_student_labl.append(y)
+                coll_pred.append(pred_tmp.cpu())
+                coll_labl.append(y)
 
-        self.teacher.train()
-        self.student.train()
+        model.train()
+        pred: torch.Tensor = torch.concat(coll_pred)
+        labl: torch.Tensor = torch.concat(coll_labl)
 
-        pred_teacher: torch.Tensor = torch.concat(eval_collector_teacher_pred)
-        pred_student: torch.Tensor = torch.concat(eval_collector_student_pred)
+        state = self.default_evaluator.run([[pred, labl]])
 
-        labl_teacher: torch.Tensor = torch.concat(eval_collector_teacher_labl)
-        labl_student: torch.Tensor = torch.concat(eval_collector_student_labl)
-
-        return self.eval(
-            pred_teacher,
-            labl_teacher,
-            pred_student,
-            labl_student)
-
-    # TODO: @staticmethod ?
-    def eval(
-            self,
-            y_teacher: torch.Tensor,
-            labl_teacher: torch.Tensor,
-            y_student: torch.Tensor,
-            labl_student: torch.Tensor) -> tuple:
-        """Evaluate Predicted Labels.
-
-        :param y_teacher: True labels for teacher.
-        :param labl_teacher: Predicted labels for teacher.
-        :param y_student: True labels for student.
-        :param labl_student: Predicted labels for student.
-
-        :return: AUC for teacher and student (teacher first).
-        """
-        default_evaluator = Engine(lambda _, batch: batch)
-        roc_auc = ROC_AUC()
-        roc_auc.attach(default_evaluator, 'roc_auc')
-
-        state_teacher = default_evaluator.run([[y_teacher, labl_teacher]])
-        state_student = default_evaluator.run([[y_student, labl_student]])
-
-        return state_teacher.metrics['roc_auc'],\
-            state_student.metrics['roc_auc']
+        return state.metrics['roc_auc']
 
     def print_table(
             self,
@@ -251,8 +220,9 @@ class Distillation:
         :param beta: Parametr for transfer-data-original-data split.
         """
         auc_list: list = []
-        for meta_epoch in tqdm(
-                range(self.meta_epochs), desc='Meta-Epoch'):
+        for meta_epoch in range(self.meta_epochs):
+
+            print(f'Meta-Epoch: {meta_epoch}')
 
             self.trainer_teacher.train_teacher(self.data_train)
 
@@ -262,10 +232,24 @@ class Distillation:
                 alpha,
                 beta)
 
-            auc_student_train, auc_teacher_train = self.eval_models(
-                self.data_train, desc="Teacher")
-            auc_student_test, auc_teacher_test = self.eval_models(
-                self.data_test, desc="Student")
+            auc_student_train, auc_teacher_train =\
+                self.eval_model(
+                    self.student,
+                    self.data_train,
+                    desc="Student Train"),\
+                self.eval_model(
+                    self.teacher,
+                    self.data_train,
+                    desc="Teacher Train")
+            auc_student_test, auc_teacher_test = \
+                self.eval_model(
+                    self.student,
+                    self.data_test,
+                    desc="Student Train"),\
+                self.eval_model(
+                    self.teacher,
+                    self.data_test,
+                    desc="Teacher Train")
 
             auc_list.append((
                 meta_epoch,

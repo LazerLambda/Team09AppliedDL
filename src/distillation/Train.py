@@ -87,8 +87,9 @@ class Train:
         """
         train_data = DataLoader(data, batch_size=self.batch_size, shuffle=True)
 
-        for _ in tqdm(range(self.epochs), desc='Epoch Teacher'):
-            for _, [x, y] in enumerate(tqdm(train_data, desc='Batch')):
+        for epoch in range(self.epochs):
+            print(f'  Teacher-Epoch: {epoch}')
+            for _, [x, y] in enumerate(tqdm(train_data, desc='  Batch')):
                 x, y = x.to(self.device), y.to(self.device)
 
                 self.optimizer.zero_grad()
@@ -133,8 +134,9 @@ class Train:
         """
         train_data = DataLoader(data, batch_size=self.batch_size, shuffle=True)
 
-        for _ in tqdm(range(self.epochs), desc='Epoch Student'):
-            for _, [x, labels] in enumerate(tqdm(train_data, desc='Batch')):
+        for epoch in range(self.epochs):
+            print(f'  Student-Epoch: {epoch}')
+            for _, [x, labels] in enumerate(tqdm(train_data, desc='  Batch')):
                 x, labels = x.to(self.device), labels.to(self.device)
 
                 self.optimizer.zero_grad()
@@ -150,8 +152,8 @@ class Train:
                 labels_o, labels_t = labels_o.type(torch.FloatTensor),\
                     labels_t.type(torch.FloatTensor)
 
-                prediction_student_t = self.module(x_t)
-                prediction_student_o = self.module(x_o)
+                prediction_student_t = self.module(x_t.to(self.device))
+                prediction_student_o = self.module(x_o.to(self.device))
 
                 prediction_teacher_t = teacher(x_t)
 
