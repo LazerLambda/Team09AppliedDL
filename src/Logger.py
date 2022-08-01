@@ -86,7 +86,7 @@ class WandBLogger(Logger):
     def log_params(self) -> None:
         """Log Hyperparameters."""
         wandb.init(project=self.params['proj_name'], entity="appl-dl-team-09")
-        wandb.config = self.params
+        wandb.config.update(self.params)
 
     def log_metrics(self, metrics: dict) -> None:
         """Log Metrics.
