@@ -39,7 +39,10 @@ def create_config(config_file_exp: str) -> dict:
         cfg[k] = v
 
     # create directory for results
-    base_dir: str = os.path.join(root_dir, cfg['teacher'])
-    mkdir_if_missing(base_dir)
+    #base_dir: str = os.path.join(root_dir, cfg['teacher'])
+    #mkdir_if_missing(base_dir)
 
+    # TODO: saving for each model
+    
+    
     return cfg
