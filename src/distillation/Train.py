@@ -161,7 +161,7 @@ class Train:
                 teacher.train()
 
                 loss = self.loss(
-                    prediction_student_t,
+                    prediction_student_t.squeeze(1),
                     prediction_student_o.squeeze(1),
                     prediction_teacher_t.squeeze(1),
                     labels_o)
