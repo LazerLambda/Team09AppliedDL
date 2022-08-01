@@ -64,8 +64,10 @@ def main(setup: dict = None):
     logger.log_params()
 
     # Init Models
-    teacher: torch.nn.Module = Teachers.get_mlp1()
+    teacher: torch.nn.Module = Teachers.get_debug_teacher()
     student: torch.nn.Module = Students.get_debug_student()
+
+    # TODO: Put teacher/student in config
 
     test_data: typing.Any = DebugDataset(40, 10)
     test_data.create_debug_dataset()
@@ -91,7 +93,7 @@ def main(setup: dict = None):
         t=param['t']
     )
 
-    distil.train_loop(0.5, 0.5)
+    distil.train_loop(param['alpha'], param['beta'])
 
     test_data.rm_csv()
 

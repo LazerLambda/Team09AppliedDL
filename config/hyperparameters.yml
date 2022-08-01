@@ -16,10 +16,7 @@ val_split: 0.2
 test_split: 0.2
 
 
-# teacher_epochs
-teacher: 'transformer'
-
 # WandB Proj Name
-proj_name: "HyperParamSearch"
+proj_name: "Test"
 
 
