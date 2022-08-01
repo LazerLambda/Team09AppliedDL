@@ -156,7 +156,7 @@ class Train:
                 prediction_student_o = self.module(x_o.to(self.device))
 
                 teacher.eval()
-                teacher.to(self.device) # TODO move to teacher file
+                teacher.to(self.device)  # TODO move to teacher file
                 prediction_teacher_t = teacher(x_t.to(self.device))
                 teacher.train()
 
