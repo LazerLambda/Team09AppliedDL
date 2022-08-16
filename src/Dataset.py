@@ -111,3 +111,109 @@ class AminoDS(Dataset):
         :return: Tensor at position idx.
         """
         return self.result[idx]
+
+
+
+
+
+class DNABERTData(Dataset):
+    """Data prep for DNABERT."""
+
+    def __init__(
+            self,
+            path: str,
+            k: int,
+            debug: bool = True
+            ):
+        """Initialize Class.
+
+        :param path: Path to dataset.
+        :param k: Length of the separated sequences.
+        :param debug: Truncate dataset for debug purposes.
+        """
+        with gzip.open(path, 'rb') as f_in:
+            with open('data.csv', 'wb') as f_out:
+                shutil.copyfileobj(f_in, f_out)
+
+        df1: pd.DataFrame = pd.read_csv(r'data.csv')
+        df1 = df1.head(n=50) if debug else df1
+
+        labels = df1['is_positive']
+        data_seq = self.seq2kmervector(df1['window'], k)
+        data_out = []
+
+        for i in range(len(data_seq)):
+            data_out.append([data_seq[i], labels[i]])
+        self.result = data_out
+        
+
+    def seq2kmer(seq, k):
+        """
+        Convert original sequence to kmers
+        
+        Arguments:
+        seq -- str, original sequence.
+        k -- int, kmer of length k specified.
+        
+        Returns:
+        kmers -- str, kmers separated by space
+
+        """
+
+        kmer = [seq[x:x+k] for x in range(len(seq)+1-k)]
+        kmers = " ".join(kmer)
+        return kmers
+
+
+    def seq2kmervector(self, seq, k):
+        """
+        Convert sequences (vectors) using seq2kmer.
+        
+        Arguments:
+        seq -- original sequences from dataset.
+        k -- int, kmer of length k specified.
+        
+        Returns:
+        seq -- set with newly decoded strings with length len(seq)
+
+        """
+        for i in range(len(seq)):
+          seq[i] = self.seq2kmer(seq[i], k)
+
+        return seq
+
+
+    def __len__(self) -> int:
+        """Return Length of Dataset.
+
+        :return: Length of dataset.
+        """
+        return len(self.result)
+
+    def __getitem__(self, idx) -> torch.Tensor:
+        """Return Item at Position idx.
+
+        :param idx: Index of item to be returned.
+
+        :return: Tensor at position idx.
+        """
+        return self.result[idx]
+
+
+    def create_tsv(self):
+      """Execute on Call.
+
+      :return: tsv data for further processing.
+      """
+      import csv
+      with open('dataDNABERT.tsv', 'w') as tsvfile:
+          writer = csv.writer(tsvfile, delimiter='\t')
+          writer.writerow(['sequence', 'label'])
+          for i in range(len(self.result)):
+            writer.writerow(self.result[i])
+
+
+
+
+
+
