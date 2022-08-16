@@ -1,5 +1,6 @@
 """Trainer Module."""
 
+from datetime import datetime
 from typing import Callable
 
 import torch
@@ -26,7 +27,7 @@ class Train:
             save_at: int = -1,
             title: str = None,
             cont_train: bool = False,
-            device: torch.device = None):  # TODO remove
+            device: torch.device = None):
         """Initialize Class.
 
         Set hyperparameters to class variables, check validity passed arguments
@@ -46,7 +47,7 @@ class Train:
         :param device: Device training should be computed on.
         """
         if title is None:
-            title = "set title to datetime"  # TODO
+            title = str(datetime.now())
 
         assert isinstance(module, nn.Module),\
             "ERROR: `module` must be of class nn.Module."
@@ -66,21 +67,27 @@ class Train:
         self.title: str = title
         self.cont_train: bool = cont_train
 
-        if device is None:  # TODO: remove
+        if device is None:
             self.device: torch.Device =\
                 torch.device(
                     "cuda" if torch.cuda.is_available() else "cpu")
-            # TODO: Class variable necessary?
         else:
             self.device = device
-            # TODO: Delete iff class variable not necessary.
         self.module.to(self.device)
+
+    def save_model(self, model: nn.Module, title: str) -> None:
+        """Save Model during Training.
+        
+        Save intermediate model weights.
+
+        :param title: Title where model will be stored.
+        """
+        torch.save(model.state_dict(), title)
 
     def train_teacher(self, data: Dataset, path: str = None):
         """Train Module.
 
         Training loop to train the defined model.
-        TODO: Write function for intermediate saving.
 
         :param data: Data the model will be trained on.
         :param path: Path where intermediate results are saved.
@@ -96,38 +103,22 @@ class Train:
                 x = x.float()
                 prediction = self.module(x)
                 loss = self.loss(prediction.squeeze(1), y)
-                # TODO: Fix dimension
                 loss.backward()
                 self.optimizer.step()
-
-        # TODO: Handle intermediate saving
-        #         if step % self.save_at == 0:
-        #             torch.save({
-        #                 'epoch': epoch,
-        #                 'model_state_dict': self.module.state_dict(),
-        #                 'optimizer_state_dict': self.optimizer.state_dict(),
-        #                 'loss': self.loss,
-        #                 }, path + self.title)
-        #             print(f"Saved Model at {epoch}") if True else None
-
-        # os.remove(path + self.title)
 
     def train_student(
             self,
             data: Dataset,
             teacher: nn.Module,
-            alpha: float,  # TODO rm
             beta: float,
             path: str = None):
         """Train Module.
 
         Training loop to train the defined student model.
-        TODO: Write function for intermediate saving.
 
         :param data: complete training dataset.
         :param teacher: teacher model for creating
             labels on part of the dataset.
-        :param alpha: balance the loss function.
         :param beta: determine which proportion the
             dataset should be split in.
         :param path: Path where intermediate results are saved.
@@ -146,7 +137,6 @@ class Train:
                 labels_o, labels_t = labels[0:proportion_beta],\
                     labels[proportion_beta::]
 
-                # TODO Useful or float?
                 x_o, x_t = x[0:proportion_beta].type(torch.FloatTensor),\
                     x[proportion_beta::].type(torch.FloatTensor)
                 labels_o, labels_t = labels_o.type(torch.FloatTensor),\
@@ -158,7 +148,7 @@ class Train:
                 prediction_teacher_t = teacher(x_t.to(self.device))
 
                 loss = self.loss(
-                    prediction_student_t,
+                    prediction_student_t.squeeze(1),
                     prediction_student_o.squeeze(1),
                     prediction_teacher_t.squeeze(1),
                     labels_o)

@@ -16,11 +16,3 @@ class Students:
             nn.Linear(240, 1),
             nn.Sigmoid()
         )
-
-    @staticmethod
-    def get_mlp_1() -> nn.Module:
-        """Return MLP 1.
-
-        :return: Simple MLP 1.
-        """
-        return None  # TODO
