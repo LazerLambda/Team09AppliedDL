@@ -26,8 +26,7 @@ class Distillation:
     the student model is trained by using a dedicated student model
     (`student_epochs` times) loss function, which consists of a loss
     function aimed at learning the teacher's learned distribution
-    and the same loss function as the teacher with temperature set
-    to 1.(TODO: ????)
+    and the same loss function as the teacher.
 
     :method train_loop: Train models.
 
@@ -49,7 +48,6 @@ class Distillation:
             meta_epochs: int,
             alpha: float,
             beta: float,
-            t: float,
             logger: Logger = None,
             device: torch.device = None,
             *args,
@@ -74,7 +72,6 @@ class Distillation:
         :param meta_epochs: int,
         :param alpha: float,
         :param beta: float,
-        :param t: float,
         :param logger: Logger class for MLflow.
         :param device: Device training should be computed on.
         :param *args: Additional params.
@@ -103,8 +100,6 @@ class Distillation:
             "ERROR: `alpha` must be in domain of [0,1]."
         assert check_cond(beta),\
             "ERROR: `beta` must be in domain of [0,1]."
-        assert t > 0,\
-            "ERROR: `t` must be larger than 0."
         assert isinstance(logger, Logger),\
             "ERROR: `logger` must be of class Logger."
 
@@ -117,7 +112,6 @@ class Distillation:
         self.meta_epochs: int = meta_epochs
         self.alpha: float = alpha
         self.beta: float = beta
-        self.t: float = t
         self.logger: Logger = logger
 
         if device is None:
