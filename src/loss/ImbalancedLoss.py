@@ -7,7 +7,8 @@ import torch
 class ImbalancedLoss:
     """Loss Function for Imbalanced Data.
 
-    Implementation according to TODO.
+    Implementation according to https://www.ijcai.org/proceedings/2021/0412.pdf.
+    Loss with respect to the problem of unlabeled data and unbalanced data.
 
     :method __init__: Init hyperparams.
     :method sum_exp: Compute Sum over Sigmoid Loss Tensor.
@@ -23,8 +24,8 @@ class ImbalancedLoss:
         """Initialize Class.
 
         :param device: Device each tensor will be moved to.
-        :param p: TODO
-        :param p_: TODO
+        :param p: Unbalanced proportion of positive labels.
+        :param p_: Balanced proportion of positive labels.
         """
         assert isinstance(p, float)
         assert isinstance(p_, float)
@@ -53,7 +54,7 @@ class ImbalancedLoss:
                         self.device)
                 ),
             )
-        )  # TODO: Remove?
+        )
 
     @staticmethod
     def sigmoid_loss(

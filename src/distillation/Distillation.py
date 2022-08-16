@@ -56,7 +56,10 @@ class Distillation:
             **kwargs):
         """Initialize Distillation Class.
 
-        # TODO Write doc
+        
+        Initialize all class variables for `Distillation`. Including
+        teacher and student model and hyperparameters.
+
         :param student: nn.Module,
         :param student_optim: optim.Optimizer,
         :param student_lr: float,
@@ -82,14 +85,10 @@ class Distillation:
             "ERROR: `student` must be of class nn.Module."
         assert check_cond(student_lr),\
             "ERROR: `student_lr` must be in domain of [0,1]."
-        # assert isinstance(student_optim, optim.Optimizer),\
-        #     "ERROR: `student_optim` must be of class optim.Optimizer."
         assert isinstance(teacher, nn.Module),\
             "ERROR: `teacher` must be of class nn.Module."
         assert check_cond(teacher_lr),\
             "ERROR: `teacher_lr` must be in domain of [0,1]."
-        # assert isinstance(teacher_optim, optim.Optimizer),\
-        #     "ERROR: `teacher_optim` must be of class optim.Optimizer."
         assert isinstance(data_train, torch.utils.data.Dataset),\
             "ERROR: `data_train` must be of class utils.data.Dataset."
         assert isinstance(data_test, torch.utils.data.Dataset),\
@@ -106,7 +105,6 @@ class Distillation:
             "ERROR: `beta` must be in domain of [0,1]."
         assert t > 0,\
             "ERROR: `t` must be larger than 0."
-        # TODO check device
         assert isinstance(logger, Logger),\
             "ERROR: `logger` must be of class Logger."
 
@@ -127,7 +125,6 @@ class Distillation:
                 torch.device(
                     "cuda" if torch.cuda.is_available() else "cpu")
 
-        # TODO rm device here
         imb_loss: ImbalancedLoss = ImbalancedLoss(
             torch.device(
                 "cuda" if torch.cuda.is_available() else "cpu"), p=0.5)
@@ -228,7 +225,6 @@ class Distillation:
             self.trainer_student.train_student(
                 self.data_train,
                 self.teacher,
-                alpha,
                 beta)
 
             auc_student_train, auc_teacher_train =\

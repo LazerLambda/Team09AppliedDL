@@ -38,7 +38,6 @@ class AminoDS(Dataset):
 
         df1: pd.DataFrame = pd.read_csv(r'data.csv')
 
-        # TODO delete head
         df1 = df1.head(n=10000) if debug else df1
 
         trn_len: int = int(proportion_train * len(df1)) - 1
@@ -76,7 +75,6 @@ class AminoDS(Dataset):
         # create an empty list with lenth of data
         integer_encoded: list = [[] for x in range(len(data))]
 
-        # TODO: Padding for non occuring characters
         for j in range(0, len(data)):
             integer_encoded[j] = [char_to_int[char] for char in data[j]]
 

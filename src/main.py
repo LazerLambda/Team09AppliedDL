@@ -29,11 +29,9 @@ def main(setup: dict = None):
     if not setup:
         # TODO typing
         flags = argparse.ArgumentParser(description='knowledge distillation')
-        flags.add_argument(  # TODO: Still in use
-            '--config_env',
-            help='Location of path config file')
+        print(type(flags))
         flags.add_argument(
-            '--config_exp',
+            '--config-exp',
             help='Location of experiments config file',
             required=True)
         flags.add_argument(
@@ -71,8 +69,8 @@ def main(setup: dict = None):
 
     test_data: typing.Any = DebugDataset(40, 10)
     test_data.create_debug_dataset()
-    data_train: typing.Any = AminoDS(data_path, dataset_type="train")
-    data_test: typing.Any = AminoDS(data_path, dataset_type="test")
+    data_train: typing.Any = AminoDS(data_path, dataset_type="train", debug=True)
+    data_test: typing.Any = AminoDS(data_path, dataset_type="test", debug=True)
 
     distil = Distillation(
         student=student,
