@@ -62,7 +62,7 @@ def main(setup: dict = None):
     logger.log_params()
 
     # Init Models
-    teacher: torch.nn.Module = Teachers.get_debug_teacher()
+    teacher: torch.nn.Module = Teachers.get_mlp1()
     student: torch.nn.Module = Students.get_debug_student()
 
     # TODO: Put teacher/student in config

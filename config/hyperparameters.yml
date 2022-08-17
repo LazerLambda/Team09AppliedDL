@@ -2,12 +2,12 @@
 student_lr: 0.0001
 teacher_lr: 0.0001
 batch_size: 128
-student_epochs: 1
-teacher_epochs: 1
-meta_epochs: 2
+student_epochs: 2
+teacher_epochs: 3
+meta_epochs: 20
 alpha: 0.5
 beta: 0.5
-t: 3
+
 
 # data set split
 train_split: 0.4
@@ -17,6 +17,6 @@ test_split: 0.2
 
 
 # WandB Proj Name
-proj_name: "Test"
+proj_name: "Proof of Concept"
 
 
