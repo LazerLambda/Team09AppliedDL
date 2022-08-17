@@ -234,11 +234,11 @@ class Distillation:
                 self.eval_model(
                     self.student,
                     self.data_test,
-                    desc="Student Train"),\
+                    desc="Student Test"),\
                 self.eval_model(
                     self.teacher,
                     self.data_test,
-                    desc="Teacher Train")
+                    desc="Teacher Test")
 
             auc_list.append((
                 meta_epoch,
