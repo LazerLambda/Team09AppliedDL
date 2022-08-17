@@ -27,9 +27,8 @@ def main(setup: dict = None):
     logger_bool: bool = False
     # Read Config
     if not setup:
-        # TODO typing
-        flags = argparse.ArgumentParser(description='knowledge distillation')
-        print(type(flags))
+        flags: argparse.ArgumentParse = argparse.ArgumentParser(
+            description='knowledge distillation')
         flags.add_argument(
             '--config-exp',
             help='Location of experiments config file',
@@ -56,21 +55,24 @@ def main(setup: dict = None):
 
     param: dict = create_config(config_path)
 
+    # Set seed
+    torch.manual_seed(param['seed'])
+
     # Init Logger
     logger: Logger = WandBLogger(param) if logger_bool\
         else MLFlowLogger(param)
     logger.log_params()
 
     # Init Models
-    teacher: torch.nn.Module = Teachers.get_mlp1()
-    student: torch.nn.Module = Students.get_debug_student()
+    teacher: torch.nn.Module = Teachers.get_lm()
+    student: torch.nn.Module = Students.get_transformer()
 
     # TODO: Put teacher/student in config
 
     test_data: typing.Any = DebugDataset(40, 10)
     test_data.create_debug_dataset()
-    data_train: typing.Any = AminoDS(data_path, dataset_type="train", debug=True)
-    data_test: typing.Any = AminoDS(data_path, dataset_type="test", debug=True)
+    data_train: typing.Any = AminoDS(data_path, dataset_type="train", debug=False)
+    data_test: typing.Any = AminoDS(data_path, dataset_type="test", debug=False)
 
     distil = Distillation(
         student=student,
