@@ -87,8 +87,7 @@ def main(setup: dict = None):
         meta_epochs=param['meta_epochs'],
         alpha=param['alpha'],
         beta=param['beta'],
-        logger=logger,
-        t=param['t']
+        logger=logger
     )
 
     distil.train_loop(param['alpha'], param['beta'])
