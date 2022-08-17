@@ -1,3 +1,6 @@
+# reproducability
+seed: 42
+
 # distillation
 student_lr: 0.0001
 teacher_lr: 0.0001
