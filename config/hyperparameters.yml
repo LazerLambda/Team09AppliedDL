@@ -29,5 +29,5 @@ proj_name: "Proof of Concept"
 # and give your model a name and call it via the main function.
 
 teacher: "MLP1Layer"
-student: "transfomer"
+student: "transformer"
 
