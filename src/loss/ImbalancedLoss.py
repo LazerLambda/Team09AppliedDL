@@ -8,7 +8,7 @@ class ImbalancedLoss:
     """Loss Function for Imbalanced Data.
 
     Implementation according to https://www.ijcai.org/proceedings/2021/0412.pdf.
-    Loss with respect to the problem of unlabeled data and unbalanced data.
+    Loss with respect to the problem of unlabeled data and imbalanced data.
 
     :method __init__: Init hyperparams.
     :method sum_exp: Compute Sum over Sigmoid Loss Tensor.
