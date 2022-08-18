@@ -52,7 +52,12 @@ Results and graphics can be found in the folder visualization.
 
 ## Reproduce our results
 
-In order to reproduce the results, execute the filerun_file.py in the folder 'notebookds'.
+In order to reproduce our results, execute the file run_file_google_colab.py in the folder 'notebooks' on GoogleColab. If you're using another device than GoogleColab, please execute !python3 -m pip install -r requirements.txt first, adjust your path to data, then run:
+os.chdir('/src)
+from main import main
+main({'config_path' :'/Team09AppliedDL/config/hyperparameters.yml', 
+      'data_path' : 'path to data',
+      'wandb' : True})
 
 ## References
 [1] Geoffrey Hinton, Oriol Vinyals, Jeff Dean, 2015. *Distilling the Knowledge in a Neural Network*. https://arxiv.org/abs/1503.02531 <br>
