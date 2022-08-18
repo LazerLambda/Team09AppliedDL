@@ -52,15 +52,7 @@ Results and graphics can be found in the folder visualization.
 
 ## Reproduce our results
 
-In order to reproduce the results on GoogleColab, one can use the following code: <br>
-!pip install pytorch-ignite <br>
-!pip install mlflow <br>
-!pip install wandb <br>
-%cd /content/Team09AppliedDL/src <br>
-from main import main <br>
-main({'config_path' :'/content/Team09AppliedDL/config/hyperparameters.yml', <br>
-      'data_path' : 'path to data', <br>
-      'wandb' : True})
+In order to reproduce the results, execute the filerun_file.py in the folder 'notebookds'.
 
 ## References
 [1] Geoffrey Hinton, Oriol Vinyals, Jeff Dean, 2015. *Distilling the Knowledge in a Neural Network*. https://arxiv.org/abs/1503.02531 <br>
