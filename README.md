@@ -48,7 +48,8 @@ In the folder src one can find the folders distillation, loss, models and visual
 All losses are implemented in the folder loss. <br>
 The training and the distillation algorithm is located in the folder distillation. <br>
 The models used for this work can be found in the folder models. <br>
-Results and graphics can be found in the folder visualization.
+The Config file (hyperparameters.yml) can be found in Config. <br>
+Results and graphics can be found in the Wiki part of this Github repository.
 
 ## Reproduce our results
 
