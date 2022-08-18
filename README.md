@@ -53,12 +53,12 @@ Results and graphics can be found in the Wiki part of this Github repository.
 
 ## Reproduce our results
 
-In order to reproduce our results, execute the file run_file_google_colab.py in the folder 'notebooks' on GoogleColab. If you're using another device than GoogleColab, please execute !python3 -m pip install -r requirements.txt first, adjust your path to data, then run:
-os.chdir('/src)
-from main import main
-main({'config_path' :'/Team09AppliedDL/config/hyperparameters.yml', 
-      'data_path' : 'path to data',
-      'wandb' : True})
+In order to reproduce our results, adjust the file run_file_google_colab.py in the folder 'notebooks' with your own data path and git key, and run it on GoogleColab. If you are using another device than GoogleColab, please execute !python3 -m pip install -r requirements.txt first, adjust your path to data, then run: <br>
+os.chdir('/src) <br>
+from main import main <br>
+main({'config_path' :'/Team09AppliedDL/config/hyperparameters.yml', <br>
+      'data_path' : 'path to data', <br>
+      'wandb' : True}) 
 
 ## References
 [1] Geoffrey Hinton, Oriol Vinyals, Jeff Dean, 2015. *Distilling the Knowledge in a Neural Network*. https://arxiv.org/abs/1503.02531 <br>
