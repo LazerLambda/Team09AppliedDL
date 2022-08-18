@@ -1,5 +1,5 @@
 # reproducability
-seed: 42
+seed: 420
 
 # distillation
 student_lr: 0.0001
@@ -22,4 +22,12 @@ test_split: 0.2
 # WandB Proj Name
 proj_name: "Proof of Concept"
 
+# specify models
+# choose teachers from "MLP1Layer", "MLP2Layer", "MLP5Layer" or save your own model in src/Models/Teachers.py
+# and give your model a name and call it via the main function.
+# choose students from "MLP1Layer", "transformer" or save your own model in src/Models/Students.py
+# and give your model a name and call it via the main function.
+
+teacher: "MLP1Layer"
+student: "transfomer"
 

@@ -43,5 +43,5 @@ class Teachers:
             nn.Linear(2048, 2048), nn.BatchNorm1d(2048), nn.ReLU(),
             nn.Linear(2048, 2048), nn.BatchNorm1d(2048), nn.ReLU(),
             nn.Linear(2048, 2048), nn.BatchNorm1d(2048), nn.ReLU(),
-            nn.Linear(2048, 1),
+            nn.Linear(2048, 1), nn.Sigmoid()
         )

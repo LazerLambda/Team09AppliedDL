@@ -63,11 +63,30 @@ def main(setup: dict = None):
         else MLFlowLogger(param)
     logger.log_params()
 
-    # Init Models
-    teacher: torch.nn.Module = Teachers.get_lm()
-    student: torch.nn.Module = Students.get_transformer()
 
-    # TODO: Put teacher/student in config
+    # Init Models (call them via Config-File)
+    
+    # Teacher Models
+    if param['teacher'] == "MLP1Layer":
+        teacher: torch.nn.Module = Teachers.get_lm()
+        
+    elif param['teacher'] == "MLP2Layer":
+        teacher: torch.nn.Module = Teachers.get_lm()
+        
+    elif param['teacher'] == "MLP5Layer":
+        teacher: torch.nn.Module = Teachers.get_lm()
+    else: 
+        raise NameError("Teacher name is not correctly specified.")
+        
+     # Student Models  
+    if param['student'] == "transformer":
+        student: torch.nn.Module = Students.get_transformer()
+         
+    elif param['student'] == "MLP1Layer":
+        student: torch.nn.Module = Students.get_debug_student()
+    else: 
+        raise NameError("Student name is not correctly specified.")
+
 
     test_data: typing.Any = DebugDataset(40, 10)
     test_data.create_debug_dataset()
