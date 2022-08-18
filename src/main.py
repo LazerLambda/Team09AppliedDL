@@ -7,7 +7,7 @@ from torch import optim
 
 from ConfigReader import create_config
 from data.make_dataset import DebugDataset
-from Dataset import AminoDS
+from data.Dataset import AminoDS
 from distillation.Distillation import Distillation
 from Logger import Logger, MLFlowLogger, WandBLogger
 from models.Students import Students

@@ -19,14 +19,12 @@ class Distillation:
     Distill a (smaller) student model from a teacher model via
     online learning. Both models are trained simultaneuosly.
     The teacher model is trained using a specific loss function
-    only depending on the provided training dataset. Furthermore,
-    the teacher's softmax function is softened using a higher
-    temperature (usually 2.5-4) to avoid peaks in the softmax
-    distribution. After some epochs of training (`teacher_epochs`)
-    the student model is trained by using a dedicated student model
-    (`student_epochs` times) loss function, which consists of a loss
-    function aimed at learning the teacher's learned distribution
-    and the same loss function as the teacher.
+    only depending on the provided training dataset.
+    After some epochs of training (`teacher_epochs`) the student model 
+    is trained by using a dedicated student model (`student_epochs` times) 
+    loss function, which consists of a loss function aimed at learning 
+    the teacher's learned distribution and the same loss function as 
+    the teacher. This concept is repeated for every epoch ('meta_epoch').
 
     :method train_loop: Train models.
 
@@ -108,7 +106,6 @@ class Distillation:
         self.data_train: Dataset = data_train
         self.data_test: Dataset = data_test
         self.batch_size: int = batch_size
-        # self.teacher_epochs: int = teacher_epochs
         self.meta_epochs: int = meta_epochs
         self.alpha: float = alpha
         self.beta: float = beta

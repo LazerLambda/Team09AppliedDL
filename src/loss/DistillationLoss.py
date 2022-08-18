@@ -15,7 +15,7 @@ class DistillationLoss:
         """Initialize Class.
 
         Formular for loss: L = alpha * L_teacher(cross entropy) +
-        (1- alpha) * L_data_original(Inbalanced loss).
+        (1- alpha) * L_data_original(Imbalanced loss).
         :param alpha: Parameter for weighting the two losses
         """
         self.imb_loss: ImbalancedLoss = ImbalancedLoss(
