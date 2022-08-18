@@ -52,7 +52,7 @@ Results and graphics can be found in the folder visualization.
 
 ## Reproduce our results
 
-In order to reproduce the results one can use the following code: <br>
+In order to reproduce the results on GoogleColab, one can use the following code: <br>
 !pip install pytorch-ignite <br>
 !pip install mlflow <br>
 !pip install wandb <br>
