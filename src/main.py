@@ -71,10 +71,10 @@ def main(setup: dict = None):
         teacher: torch.nn.Module = Teachers.get_lm()
         
     elif param['teacher'] == "MLP2Layer":
-        teacher: torch.nn.Module = Teachers.get_lm()
+        teacher: torch.nn.Module = Teachers.get_debug_teacher()
         
     elif param['teacher'] == "MLP5Layer":
-        teacher: torch.nn.Module = Teachers.get_lm()
+        teacher: torch.nn.Module = Teachers.get_mlp1()
     else: 
         raise NameError("Teacher name is not correctly specified.")
         
