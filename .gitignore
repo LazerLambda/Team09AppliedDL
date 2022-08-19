@@ -104,3 +104,4 @@ wandb/
 
 # Hyperband Snakemake
 default_config/
+*result

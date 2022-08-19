@@ -1,5 +1,6 @@
 """Module for Distillation."""
 
+import os
 import torch
 from ignite.contrib.metrics import ROC_AUC
 from ignite.engine.engine import Engine
@@ -108,9 +109,7 @@ class Distillation:
         self.data_train: Dataset = data_train
         self.data_test: Dataset = data_test
         self.batch_size: int = batch_size
-        # self.teacher_epochs: int = teacher_epochs
         self.meta_epochs: int = meta_epochs
-        self.alpha: float = alpha
         self.beta: float = beta
         self.logger: Logger = logger
 
@@ -123,7 +122,7 @@ class Distillation:
             torch.device(
                 "cuda" if torch.cuda.is_available() else "cpu"), p=0.5)
         dist_loss: DistillationLoss =\
-            DistillationLoss(alpha=0.5)
+            DistillationLoss(alpha=alpha)
         self.trainer_teacher: Train = Train(
             teacher,
             teacher_optim,
@@ -203,11 +202,11 @@ class Distillation:
         )
         print(info_line)
 
-    def train_loop(self, alpha, beta) -> None:
+    def train_loop(self, path_result: str) -> None:
         """Train Teacher and Student.
 
-        :param alpha: Alpha parameter for distillation-loss function.
-        :param beta: Parametr for transfer-data-original-data split.
+        :param path_result: Path in which the results will be saved
+            (for hyperparameter tuning)
         """
         auc_list: list = []
         for meta_epoch in range(self.meta_epochs):
@@ -219,7 +218,7 @@ class Distillation:
             self.trainer_student.train_student(
                 self.data_train,
                 self.teacher,
-                beta)
+                self.beta)
 
             auc_student_train, auc_teacher_train =\
                 self.eval_model(
@@ -256,3 +255,7 @@ class Distillation:
 
         for e in auc_list:
             self.print_table(e[0], e[1], e[2], e[3], e[4])
+
+        with open(os.path.join(path_result, "result"), 'w') as file:
+            # Write AUC of student model to result-file
+            file.write(str(e[4]))

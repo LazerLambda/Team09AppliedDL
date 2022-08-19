@@ -1,6 +1,7 @@
 """Entry point for Debugging."""
 import argparse
 import typing
+import os
 
 import torch
 from torch import optim
@@ -28,8 +29,8 @@ def main(setup: dict = None):
     # Read Config
     if not setup:
         # TODO typing
-        flags = argparse.ArgumentParser(description='knowledge distillation')
-        print(type(flags))
+        flags: argparse.ArgumentParser = argparse.ArgumentParser(
+            description='knowledge distillation')
         flags.add_argument(
             '--config-exp',
             help='Location of experiments config file',
@@ -69,8 +70,8 @@ def main(setup: dict = None):
 
     test_data: typing.Any = DebugDataset(40, 10)
     test_data.create_debug_dataset()
-    data_train: typing.Any = AminoDS(data_path, dataset_type="train", debug=True)
-    data_test: typing.Any = AminoDS(data_path, dataset_type="test", debug=True)
+    data_train: typing.Any = AminoDS(data_path, dataset_type="train", debug=False)
+    data_test: typing.Any = AminoDS(data_path, dataset_type="test", debug=False)
 
     distil = Distillation(
         student=student,
@@ -90,7 +91,8 @@ def main(setup: dict = None):
         logger=logger
     )
 
-    distil.train_loop(param['alpha'], param['beta'])
+    path_of_config: str = os.path.dirname(config_path)
+    distil.train_loop(path_of_config)
 
     test_data.rm_csv()
 
