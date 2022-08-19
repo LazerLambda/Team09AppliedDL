@@ -68,55 +68,63 @@ main({'config_path' :'/Team09AppliedDL/config/hyperparameters.yml', <br>
 Project Organization
 ------------
 
-    ├── LICENSE
-    ├── Makefile           <- Makefile with commands like `make data` or `make train`
-    ├── README.md          <- The top-level README for developers using this project.
     ├── config 
     │   ├── hyperparameters.yml  <- YML-File for hyperparameters and model specification.
-    ├── data
-    │   ├── external       <- Data from third party sources.
-    │   ├── interim        <- Intermediate data that has been transformed.
-    │   ├── processed      <- The final, canonical data sets for modeling.
-    │   └── raw            <- The original, immutable data dump.
-    │
+    │  
     ├── docs               <- A default Sphinx project; see sphinx-doc.org for details.
+    │   ├── Makefile       <- ?
+    │   ├── command.rst    <- ?
+    │   ├── conf.py        <- ?
+    │   ├── getting_started.rst  <- ?
+    │   ├── index.rst      <- ?
+    │   ├── make.bat       <- ?
+    │    
+    ├── notebooks          <- Jupyter notebooks.
+    │   ├── run_file_google_colab.ipynb  <- Notebook for running the code on GoogleColab
     │
-    ├── models             <- Trained and serialized models, model predictions, or model summaries.
+    ├── reports            <- folder with images containing reported final results           
+    │   ├── figures
+    │   │   ├── auc_student_test.png
+    │   │   ├── auc_student_train.png
+    │   │   ├── auc_teacher_test.png
+    │   │   ├── auc_teacher_test.png
     │
-    ├── notebooks           <- Jupyter notebooks.
-    │   ├── run_file.ipynb  <- Notebook which can run the code.
-    │
-    ├── references         <- Data dictionaries, manuals, and all other explanatory materials.
-    │
-    │
-    ├── requirements.txt   <- The requirements file for reproducing the analysis environment, e.g.
-    │                         generated with `pip freeze > requirements.txt`
-    │
-    ├── setup.py           <- makes project pip installable (pip install -e .) so src can be imported
-    ├── src                <- Source code for use in this project.
-    │   ├── __init__.py    <- Makes src a Python module
+    ├── src                <- Source code to use in this project
     │   │
-    │   ├── data           <- Scripts to generate random test data
-    │   │   └── make_dataset.py
+    │   ├── data           <- Scripts to preprocess data
+    │   │   ├── Dataset.py        <- Script for data preparation (read in and one hot encoding of the original dataset) + preparation of data for DNABert
+    │   │   ├── make_dataset.py   <- Script for generating random test data
     │   │
-    │   ├── distillation       <- Script for the distillation class with evaluation and train loop
-    │   │   └── Distillation.py
-    │   │
+    │   ├── distillation          <- Script for the distillation class with evaluation and train loop
+    │   │   ├── Distillation.py
+    │   │   ├── Train.py
+    │
+    │   ├── loss  
+    │   │   ├── DistillationLoss.py  <- Script for our distillation loss
+    │   │   ├── ImbalancedLoss.py    <- Script for the imbalanced loss
+    │
     │   ├── models             <- Scripts for teacher and student models
-    │   │   ├── Students.py
-    │   │   ├── Teachers.py
-    │   │
-    │   └── visualization      <- Scripts to create exploratory and results oriented visualizations
-    │   │    └── visualize.py
+    │   │   ├── Students.py    <- transformer and mlp's
+    │   │   ├── Teachers.py    <- mlp's
+    │
     │   ├── ConfigReader.py    <- Script to read configurations
-    │   │
-    │   ├── Dataset.py         <- Script for data preparation (read in and one hot encoding of the original dataset)
-    │   │
     │   ├── Logger.py          <- Script for including mlflow and wandb
-    │   │
-    │   │
-    │   └── main.py            <- Launch script
-
+    │   ├── main.py            <- Launch script
+    │
+    ├── tests
+    │   ├── DebugDataset.py          <- Script for generating random test data
+    │   ├── test_Dataset.py          <- EMPTY
+    │   ├── test_ImbalancedLoss.py   <- testing the imbalanced loss for correct parameters, properties, type and shape of outouts and for correct behaviour
+    │   
+    ├── LICENSE
+    ├── Makefile               <- Makefile with commands like `make data` or `make train`
+    ├── README.md              <- The top-level README for developers using this project.
+    ├── requirements.txt       <- The requirements file for reproducing the analysis environment and installing all required packages
+    ├── setup.py               <- makes project pip installable (pip install -e .) so src can be imported
+    ├── test_environment.py    <- ?
+    ├── tox.ini                <- ?
+   
+ 
 
 --------
 
