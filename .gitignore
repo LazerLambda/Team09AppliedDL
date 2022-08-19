@@ -98,6 +98,7 @@ wandb/
 # Data
 *.csv
 *.gzip
+*.csv.gz
 
 # Virtual Environment
 .venv/
