@@ -48,9 +48,17 @@ In the folder src one can find the folders distillation, loss, models and visual
 All losses are implemented in the folder loss. <br>
 The training and the distillation algorithm is located in the folder distillation. <br>
 The models used for this work can be found in the folder models. <br>
-Results and graphics can be found in the folder visualization.
+The Config file (hyperparameters.yml) can be found in Config. <br>
+Results and graphics can be found in the Wiki part of this Github repository.
 
+## Reproduce our results
 
+In order to reproduce our results, adjust the file run_file_google_colab.py in the folder 'notebooks' with your own data path and git key, and run it on GoogleColab. If you are using another device than GoogleColab, please execute !python3 -m pip install -r requirements.txt first, adjust your path to data, then run: <br>
+os.chdir('/src) <br>
+from main import main <br>
+main({'config_path' :'/Team09AppliedDL/config/hyperparameters.yml', <br>
+      'data_path' : 'path to data', <br>
+      'wandb' : True}) 
 
 ## References
 [1] Geoffrey Hinton, Oriol Vinyals, Jeff Dean, 2015. *Distilling the Knowledge in a Neural Network*. https://arxiv.org/abs/1503.02531 <br>
@@ -63,24 +71,23 @@ Project Organization
     ├── LICENSE
     ├── Makefile           <- Makefile with commands like `make data` or `make train`
     ├── README.md          <- The top-level README for developers using this project.
+    ├── config 
+    │   ├── hyperparameters.yml  <- YML-File for hyperparameters and model specification.
     ├── data
     │   ├── external       <- Data from third party sources.
     │   ├── interim        <- Intermediate data that has been transformed.
     │   ├── processed      <- The final, canonical data sets for modeling.
     │   └── raw            <- The original, immutable data dump.
     │
-    ├── docs               <- A default Sphinx project; see sphinx-doc.org for details
+    ├── docs               <- A default Sphinx project; see sphinx-doc.org for details.
     │
-    ├── models             <- Trained and serialized models, model predictions, or model summaries
+    ├── models             <- Trained and serialized models, model predictions, or model summaries.
     │
-    ├── notebooks          <- Jupyter notebooks. Naming convention is a number (for ordering),
-    │                         the creator's initials, and a short `-` delimited description, e.g.
-    │                         `1.0-jqp-initial-data-exploration`.
+    ├── notebooks           <- Jupyter notebooks.
+    │   ├── run_file.ipynb  <- Notebook which can run the code.
     │
     ├── references         <- Data dictionaries, manuals, and all other explanatory materials.
     │
-    ├── reports            <- Generated analysis as HTML, PDF, LaTeX, etc.
-    │   └── figures        <- Generated graphics and figures to be used in reporting
     │
     ├── requirements.txt   <- The requirements file for reproducing the analysis environment, e.g.
     │                         generated with `pip freeze > requirements.txt`

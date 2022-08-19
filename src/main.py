@@ -8,7 +8,7 @@ from torch import optim
 
 from ConfigReader import create_config
 from data.make_dataset import DebugDataset
-from Dataset import AminoDS
+from data.Dataset import AminoDS
 from distillation.Distillation import Distillation
 from Logger import Logger, MLFlowLogger, WandBLogger
 from models.Students import Students
@@ -28,8 +28,7 @@ def main(setup: dict = None):
     logger_bool: bool = False
     # Read Config
     if not setup:
-        # TODO typing
-        flags: argparse.ArgumentParser = argparse.ArgumentParser(
+        flags: argparse.ArgumentParse = argparse.ArgumentParser(
             description='knowledge distillation')
         flags.add_argument(
             '--config-exp',
@@ -57,16 +56,38 @@ def main(setup: dict = None):
 
     param: dict = create_config(config_path)
 
+    # Set seed
+    torch.manual_seed(param['seed'])
+
     # Init Logger
     logger: Logger = WandBLogger(param) if logger_bool\
         else MLFlowLogger(param)
     logger.log_params()
 
-    # Init Models
-    teacher: torch.nn.Module = Teachers.get_mlp1()
-    student: torch.nn.Module = Students.get_debug_student()
 
-    # TODO: Put teacher/student in config
+    # Init Models (call them via Config-File)
+    
+    # Teacher Models
+    if param['teacher'] == "MLP1Layer":
+        teacher: torch.nn.Module = Teachers.get_lm()
+        
+    elif param['teacher'] == "MLP2Layer":
+        teacher: torch.nn.Module = Teachers.get_debug_teacher()
+        
+    elif param['teacher'] == "MLP5Layer":
+        teacher: torch.nn.Module = Teachers.get_mlp1()
+    else: 
+        raise NameError("Teacher name is not correctly specified.")
+        
+     # Student Models  
+    if param['student'] == "transformer":
+        student: torch.nn.Module = Students.get_transformer()
+         
+    elif param['student'] == "MLP1Layer":
+        student: torch.nn.Module = Students.get_debug_student()
+    else: 
+        raise NameError("Student name is not correctly specified.")
+
 
     test_data: typing.Any = DebugDataset(40, 10)
     test_data.create_debug_dataset()
