@@ -98,9 +98,11 @@ wandb/
 # Data
 *.csv
 *.gzip
+*.csv.gz
 
 # Virtual Environment
 .venv/
 
 # Hyperband Snakemake
 default_config/
+*result

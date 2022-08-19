@@ -1,13 +1,14 @@
 """Entry point for Debugging."""
 import argparse
+import os
 import typing
 
 import torch
 from torch import optim
 
 from ConfigReader import create_config
-from data.make_dataset import DebugDataset
 from data.Dataset import AminoDS
+from data.make_dataset import DebugDataset
 from distillation.Distillation import Distillation
 from Logger import Logger, MLFlowLogger, WandBLogger
 from models.Students import Students
@@ -27,7 +28,7 @@ def main(setup: dict = None):
     logger_bool: bool = False
     # Read Config
     if not setup:
-        flags: argparse.ArgumentParse = argparse.ArgumentParser(
+        flags = argparse.ArgumentParser(
             description='knowledge distillation')
         flags.add_argument(
             '--config-exp',
@@ -63,35 +64,41 @@ def main(setup: dict = None):
         else MLFlowLogger(param)
     logger.log_params()
 
-
     # Init Models (call them via Config-File)
-    
-    # Teacher Models
-    if param['teacher'] == "MLP1Layer":
-        teacher: torch.nn.Module = Teachers.get_lm()
-        
-    elif param['teacher'] == "MLP2Layer":
-        teacher: torch.nn.Module = Teachers.get_debug_teacher()
-        
-    elif param['teacher'] == "MLP5Layer":
-        teacher: torch.nn.Module = Teachers.get_mlp1()
-    else: 
-        raise NameError("Teacher name is not correctly specified.")
-        
-     # Student Models  
-    if param['student'] == "transformer":
-        student: torch.nn.Module = Students.get_transformer()
-         
-    elif param['student'] == "MLP1Layer":
-        student: torch.nn.Module = Students.get_debug_student()
-    else: 
-        raise NameError("Student name is not correctly specified.")
 
+    # Teacher Models
+    teacher: torch.nn.Module = None
+    if param['teacher'] == "MLP1Layer":
+        teacher = Teachers.get_lm()
+
+    elif param['teacher'] == "MLP2Layer":
+        teacher = Teachers.get_debug_teacher()
+
+    elif param['teacher'] == "MLP5Layer":
+        teacher = Teachers.get_mlp1()
+    else:
+        raise NameError("Teacher name is not correctly specified.")
+
+    # Student Models
+    student: torch.nn.Module = None
+    if param['student'] == "transformer":
+        student = Students.get_transformer()
+
+    elif param['student'] == "MLP1Layer":
+        student = Students.get_debug_student()
+    else:
+        raise NameError("Student name is not correctly specified.")
 
     test_data: typing.Any = DebugDataset(40, 10)
     test_data.create_debug_dataset()
-    data_train: typing.Any = AminoDS(data_path, dataset_type="train", debug=False)
-    data_test: typing.Any = AminoDS(data_path, dataset_type="test", debug=False)
+    data_train: typing.Any = AminoDS(
+        data_path,
+        dataset_type="train",
+        debug=False)
+    data_test: typing.Any = AminoDS(
+        data_path,
+        dataset_type="test",
+        debug=False)
 
     distil = Distillation(
         student=student,
@@ -111,7 +118,8 @@ def main(setup: dict = None):
         logger=logger
     )
 
-    distil.train_loop(param['alpha'], param['beta'])
+    path_of_config: str = os.path.dirname(config_path)
+    distil.train_loop(path_of_config)
 
     test_data.rm_csv()
 

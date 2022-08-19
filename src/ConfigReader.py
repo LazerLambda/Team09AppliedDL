@@ -27,7 +27,6 @@ def create_config(config_file_exp: str) -> dict:
     :return: Dictionary with parameter-config.
     """
     # Config for environment path
-    root_dir: str = "./models"
 
     with open(config_file_exp, 'r') as stream:
         config = yaml.safe_load(stream)
@@ -38,11 +37,4 @@ def create_config(config_file_exp: str) -> dict:
     for k, v in config.items():
         cfg[k] = v
 
-    # create directory for results
-    #base_dir: str = os.path.join(root_dir, cfg['teacher'])
-    #mkdir_if_missing(base_dir)
-
-    # TODO: saving for each model
-    
-    
     return cfg

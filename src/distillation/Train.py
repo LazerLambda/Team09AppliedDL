@@ -77,7 +77,7 @@ class Train:
 
     def save_model(self, model: nn.Module, title: str) -> None:
         """Save Model during Training.
-        
+
         Save intermediate model weights.
 
         :param title: Title where model will be stored.
@@ -105,6 +105,9 @@ class Train:
                 loss = self.loss(prediction.squeeze(1), y)
                 loss.backward()
                 self.optimizer.step()
+
+        if path is not None:
+            self.save_model(self.module, path)
 
     def train_student(
             self,
@@ -158,3 +161,6 @@ class Train:
 
                 loss.backward()
                 self.optimizer.step()
+
+        if path is not None:
+            self.save_model(self.module, path)
