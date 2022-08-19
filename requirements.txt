@@ -12,7 +12,7 @@ errno
 EasyDict
 
 
-flake8
+flake8==4.0.1
 gzip
 Logger
 mlflow

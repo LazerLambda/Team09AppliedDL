@@ -38,7 +38,7 @@ class Teachers:
         :return: MLP model.
         """
         return nn.Sequential(
-            nn.Flatten(1,-1),
+            nn.Flatten(1, -1),
             nn.Linear(240, 2048), nn.BatchNorm1d(2048), nn.ReLU(),
             nn.Linear(2048, 2048), nn.BatchNorm1d(2048), nn.ReLU(),
             nn.Linear(2048, 2048), nn.BatchNorm1d(2048), nn.ReLU(),

@@ -1,6 +1,7 @@
 """Module for Distillation."""
 
 import os
+
 import torch
 from ignite.contrib.metrics import ROC_AUC
 from ignite.engine.engine import Engine
@@ -21,10 +22,10 @@ class Distillation:
     online learning. Both models are trained simultaneuosly.
     The teacher model is trained using a specific loss function
     only depending on the provided training dataset.
-    After some epochs of training (`teacher_epochs`) the student model 
-    is trained by using a dedicated student model (`student_epochs` times) 
-    loss function, which consists of a loss function aimed at learning 
-    the teacher's learned distribution and the same loss function as 
+    After some epochs of training (`teacher_epochs`) the student model
+    is trained by using a dedicated student model (`student_epochs` times)
+    loss function, which consists of a loss function aimed at learning
+    the teacher's learned distribution and the same loss function as
     the teacher. This concept is repeated for every epoch ('meta_epoch').
 
     :method train_loop: Train models.
@@ -53,7 +54,6 @@ class Distillation:
             **kwargs):
         """Initialize Distillation Class.
 
-        
         Initialize all class variables for `Distillation`. Including
         teacher and student model and hyperparameters.
 
