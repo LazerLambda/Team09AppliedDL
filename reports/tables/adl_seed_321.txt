@@ -1,0 +1,40 @@
+seed: 321
+
+alpha=0, beta=1, teacher-epochs = 2, student-epochs = 1
+
+Meta Epoch: 0.000	 AUC Tchr. Trn.: 0.861	 AUC Tchr. Tst.: 0.864	 AUC Stdnt. Trn.: 0.650	 AUC Stdnt. Tst.: 0.652
+Meta Epoch: 1.000	 AUC Tchr. Trn.: 0.863	 AUC Tchr. Tst.: 0.866	 AUC Stdnt. Trn.: 0.652	 AUC Stdnt. Tst.: 0.653
+Meta Epoch: 2.000	 AUC Tchr. Trn.: 0.864	 AUC Tchr. Tst.: 0.866	 AUC Stdnt. Trn.: 0.672	 AUC Stdnt. Tst.: 0.674
+Meta Epoch: 3.000	 AUC Tchr. Trn.: 0.864	 AUC Tchr. Tst.: 0.866	 AUC Stdnt. Trn.: 0.746	 AUC Stdnt. Tst.: 0.749
+Meta Epoch: 4.000	 AUC Tchr. Trn.: 0.864	 AUC Tchr. Tst.: 0.866	 AUC Stdnt. Trn.: 0.439	 AUC Stdnt. Tst.: 0.446
+Meta Epoch: 5.000	 AUC Tchr. Trn.: 0.864	 AUC Tchr. Tst.: 0.866	 AUC Stdnt. Trn.: 0.458	 AUC Stdnt. Tst.: 0.464
+Meta Epoch: 6.000	 AUC Tchr. Trn.: 0.864	 AUC Tchr. Tst.: 0.866	 AUC Stdnt. Trn.: 0.647	 AUC Stdnt. Tst.: 0.653
+Meta Epoch: 7.000	 AUC Tchr. Trn.: 0.864	 AUC Tchr. Tst.: 0.866	 AUC Stdnt. Trn.: 0.685	 AUC Stdnt. Tst.: 0.690
+Meta Epoch: 8.000	 AUC Tchr. Trn.: 0.864	 AUC Tchr. Tst.: 0.866	 AUC Stdnt. Trn.: 0.768	 AUC Stdnt. Tst.: 0.768
+Meta Epoch: 9.000	 AUC Tchr. Trn.: 0.864	 AUC Tchr. Tst.: 0.866	 AUC Stdnt. Trn.: 0.715	 AUC Stdnt. Tst.: 0.712
+
+alpha=0.5, beta=0.5, teacher-epochs = 2, student-epochs = 1
+
+Meta Epoch: 0.000	 AUC Tchr. Trn.: 0.861	 AUC Tchr. Tst.: 0.864	 AUC Stdnt. Trn.: 0.851	 AUC Stdnt. Tst.: 0.853
+Meta Epoch: 1.000	 AUC Tchr. Trn.: 0.863	 AUC Tchr. Tst.: 0.866	 AUC Stdnt. Trn.: 0.854	 AUC Stdnt. Tst.: 0.857
+Meta Epoch: 2.000	 AUC Tchr. Trn.: 0.864	 AUC Tchr. Tst.: 0.866	 AUC Stdnt. Trn.: 0.821	 AUC Stdnt. Tst.: 0.825
+Meta Epoch: 3.000	 AUC Tchr. Trn.: 0.864	 AUC Tchr. Tst.: 0.866	 AUC Stdnt. Trn.: 0.808	 AUC Stdnt. Tst.: 0.812
+Meta Epoch: 4.000	 AUC Tchr. Trn.: 0.864	 AUC Tchr. Tst.: 0.866	 AUC Stdnt. Trn.: 0.818	 AUC Stdnt. Tst.: 0.824
+Meta Epoch: 5.000	 AUC Tchr. Trn.: 0.864	 AUC Tchr. Tst.: 0.866	 AUC Stdnt. Trn.: 0.816	 AUC Stdnt. Tst.: 0.820
+Meta Epoch: 6.000	 AUC Tchr. Trn.: 0.864	 AUC Tchr. Tst.: 0.866	 AUC Stdnt. Trn.: 0.848	 AUC Stdnt. Tst.: 0.852
+Meta Epoch: 7.000	 AUC Tchr. Trn.: 0.864	 AUC Tchr. Tst.: 0.866	 AUC Stdnt. Trn.: 0.814	 AUC Stdnt. Tst.: 0.817
+Meta Epoch: 8.000	 AUC Tchr. Trn.: 0.864	 AUC Tchr. Tst.: 0.866	 AUC Stdnt. Trn.: 0.825	 AUC Stdnt. Tst.: 0.828
+Meta Epoch: 9.000	 AUC Tchr. Trn.: 0.864	 AUC Tchr. Tst.: 0.866	 AUC Stdnt. Trn.: 0.820	 AUC Stdnt. Tst.: 0.823
+
+alpha=1, beta=0, teacher-epochs = 2, student-epochs = 1
+
+Meta Epoch: 0.000	 AUC Tchr. Trn.: 0.861	 AUC Tchr. Tst.: 0.864	 AUC Stdnt. Trn.: 0.853	 AUC Stdnt. Tst.: 0.854
+Meta Epoch: 1.000	 AUC Tchr. Trn.: 0.863	 AUC Tchr. Tst.: 0.866	 AUC Stdnt. Trn.: 0.835	 AUC Stdnt. Tst.: 0.840
+Meta Epoch: 2.000	 AUC Tchr. Trn.: 0.864	 AUC Tchr. Tst.: 0.866	 AUC Stdnt. Trn.: 0.802	 AUC Stdnt. Tst.: 0.806
+Meta Epoch: 3.000	 AUC Tchr. Trn.: 0.864	 AUC Tchr. Tst.: 0.866	 AUC Stdnt. Trn.: 0.829	 AUC Stdnt. Tst.: 0.832
+Meta Epoch: 4.000	 AUC Tchr. Trn.: 0.864	 AUC Tchr. Tst.: 0.866	 AUC Stdnt. Trn.: 0.817	 AUC Stdnt. Tst.: 0.820
+Meta Epoch: 5.000	 AUC Tchr. Trn.: 0.864	 AUC Tchr. Tst.: 0.866	 AUC Stdnt. Trn.: 0.825	 AUC Stdnt. Tst.: 0.828
+Meta Epoch: 6.000	 AUC Tchr. Trn.: 0.864	 AUC Tchr. Tst.: 0.866	 AUC Stdnt. Trn.: 0.819	 AUC Stdnt. Tst.: 0.821
+Meta Epoch: 7.000	 AUC Tchr. Trn.: 0.864	 AUC Tchr. Tst.: 0.866	 AUC Stdnt. Trn.: 0.816	 AUC Stdnt. Tst.: 0.816
+Meta Epoch: 8.000	 AUC Tchr. Trn.: 0.864	 AUC Tchr. Tst.: 0.866	 AUC Stdnt. Trn.: 0.815	 AUC Stdnt. Tst.: 0.818
+Meta Epoch: 9.000	 AUC Tchr. Trn.: 0.864	 AUC Tchr. Tst.: 0.866	 AUC Stdnt. Trn.: 0.840	 AUC Stdnt. Tst.: 0.843
