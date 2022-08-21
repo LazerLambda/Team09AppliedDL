@@ -2,33 +2,24 @@
 -e .
 
 # external requirements
-abc
 argparse
 awscli
-click
 coverage
 datetime
-errno
 EasyDict
 
 
 flake8==4.0.1
-gzip
 Logger
 mlflow
 numpy
-os
 pandas
 pytest
 python-dotenv>=0.5.1
 
 pytorch-ignite
-random
-shutil
 sklearn
 Sphinx
 torch
 tqdm
-typing
 wandb
-yaml
