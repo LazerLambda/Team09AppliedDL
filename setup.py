@@ -5,6 +5,6 @@ setup(
     packages=find_packages(),
     version='0.1.0',
     description='tba',
-    author='tba',
-    license='',
+    author='Gjeneta Ramadani, Philipp Koch, Simon Schosser',
+    license='Apache License, Version 2.0',
 )
