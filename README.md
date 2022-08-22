@@ -53,12 +53,17 @@ Results and graphics can be found in the Wiki part of this Github repository.
 
 ## Reproduce our results
 
-In order to reproduce our results, adjust the file run_file_google_colab.py in the folder 'notebooks' with your own data path and git key, and run it on GoogleColab. If you are using another device than GoogleColab, please execute !python3 -m pip install -r requirements.txt first, adjust your path to data, then run: <br>
-os.chdir('/src) <br>
-from main import main <br>
-main({'config_path' :'/Team09AppliedDL/config/hyperparameters.yml', <br>
-      'data_path' : 'path to data', <br>
-      'wandb' : True}) 
+In order to reproduce our results, adjust the file run_file_google_colab.py in the folder 'notebooks' with your own data path and git key, and run it on GoogleColab. If you are using another device than GoogleColab, please execute:
+1. > `!python3 -m pip install -r requirements.txt`
+2. > \# Adjust your path to data (e.g. connect to google drive)
+2. > `os.chdir('./src')`
+3. > `from main import main`
+4. > `
+        main({
+            'config_path' :'/Team09AppliedDL/config/hyperparameters.yml',
+            'data_path' : 'path to data',
+            'wandb' : True})
+     `
 
 ## References
 [1] Geoffrey Hinton, Oriol Vinyals, Jeff Dean, 2015. *Distilling the Knowledge in a Neural Network*. https://arxiv.org/abs/1503.02531 <br>
@@ -70,14 +75,6 @@ Project Organization
 
     ├── config 
     │   ├── hyperparameters.yml  <- YML-File for hyperparameters and model specification.
-    │  
-    ├── docs               <- A default Sphinx project; see sphinx-doc.org for details.
-    │   ├── Makefile       <- ?
-    │   ├── command.rst    <- ?
-    │   ├── conf.py        <- ?
-    │   ├── getting_started.rst  <- ?
-    │   ├── index.rst      <- ?
-    │   ├── make.bat       <- ?
     │    
     ├── notebooks          <- Jupyter notebooks.
     │   ├── run_file_google_colab.ipynb  <- Notebook for running the code on GoogleColab
@@ -121,8 +118,8 @@ Project Organization
     ├── README.md              <- The top-level README for developers using this project.
     ├── requirements.txt       <- The requirements file for reproducing the analysis environment and installing all required packages
     ├── setup.py               <- makes project pip installable (pip install -e .) so src can be imported
-    ├── test_environment.py    <- ?
-    ├── tox.ini                <- ?
+    ├── test_environment.py    <- Test for correct python version
+    ├── tox.ini                <- Tox file. Run for tests and linting
    
  
 
