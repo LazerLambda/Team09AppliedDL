@@ -86,11 +86,8 @@ Project Organization
     │   │   ├── auc_teacher_test.png
     │   │   ├── auc_teacher_test.png
     │   │
-    │   ├── tables         <- folder with results of different seeds (123, 321, 42, 420)
+    │   ├── tables         <- folder with results of seed=123
     │   │   ├── adl_seed_123.txt
-    │   │   ├── adl_seed_321.txt
-    │   │   ├── adl_seed_42.txt
-    │   │   ├── adl_seed_420.txt
     │
     ├── src                <- Source code to use in this project
     │   │
