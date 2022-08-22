@@ -80,11 +80,17 @@ Project Organization
     │   ├── run_file_google_colab.ipynb  <- Notebook for running the code on GoogleColab
     │
     ├── reports            <- folder with images containing reported final results           
-    │   ├── figures
+    │   ├── figures        <- folder with figures of the results with seed 123
     │   │   ├── auc_student_test.png
     │   │   ├── auc_student_train.png
     │   │   ├── auc_teacher_test.png
     │   │   ├── auc_teacher_test.png
+    │   │
+    │   ├── tables         <- folder with results of different seeds (123, 321, 42, 420)
+    │   │   ├── adl_seed_123.txt
+    │   │   ├── adl_seed_321.txt
+    │   │   ├── adl_seed_42.txt
+    │   │   ├── adl_seed_420.txt
     │
     ├── src                <- Source code to use in this project
     │   │
@@ -109,8 +115,6 @@ Project Organization
     │   ├── main.py            <- Launch script
     │
     ├── tests
-    │   ├── DebugDataset.py          <- Script for generating random test data
-    │   ├── test_Dataset.py          <- EMPTY
     │   ├── test_ImbalancedLoss.py   <- testing the imbalanced loss for correct parameters, properties, type and shape of outouts and for correct behaviour
     │   
     ├── LICENSE
