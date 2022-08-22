@@ -79,12 +79,18 @@ Project Organization
     ├── notebooks          <- Jupyter notebooks.
     │   ├── run_file_google_colab.ipynb  <- Notebook for running the code on GoogleColab
     │
-    ├── reports            <- folder with images containing reported final results           
-    │   ├── figures
+    ├── reports            <- folder with images and tables containing reported final results           
+    │   ├── figures        <- images containing the results for seed=123
     │   │   ├── auc_student_test.png
     │   │   ├── auc_student_train.png
     │   │   ├── auc_teacher_test.png
     │   │   ├── auc_teacher_test.png
+    │   ├── tables         <- tables containing the results for several test runs
+    │   │   ├── adl_seed_123.txt 
+    │   │   ├── adl_seed_321.txt
+    │   │   ├── adl_seed_420.txt
+    │   │   ├── adl_seed_42.txt
+
     │
     ├── src                <- Source code to use in this project
     │   │
