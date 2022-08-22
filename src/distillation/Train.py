@@ -80,6 +80,7 @@ class Train:
 
         Save intermediate model weights.
 
+        :param model: Model to be saved.
         :param title: Title where model will be stored.
         """
         torch.save(model.state_dict(), title)

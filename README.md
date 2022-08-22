@@ -75,14 +75,6 @@ Project Organization
 
     ├── config 
     │   ├── hyperparameters.yml  <- YML-File for hyperparameters and model specification.
-    │  
-    ├── docs               <- A default Sphinx project; see sphinx-doc.org for details.
-    │   ├── Makefile       <- ?
-    │   ├── command.rst    <- ?
-    │   ├── conf.py        <- ?
-    │   ├── getting_started.rst  <- ?
-    │   ├── index.rst      <- ?
-    │   ├── make.bat       <- ?
     │    
     ├── notebooks          <- Jupyter notebooks.
     │   ├── run_file_google_colab.ipynb  <- Notebook for running the code on GoogleColab
@@ -126,8 +118,8 @@ Project Organization
     ├── README.md              <- The top-level README for developers using this project.
     ├── requirements.txt       <- The requirements file for reproducing the analysis environment and installing all required packages
     ├── setup.py               <- makes project pip installable (pip install -e .) so src can be imported
-    ├── test_environment.py    <- ?
-    ├── tox.ini                <- ?
+    ├── test_environment.py    <- Test for correct python version
+    ├── tox.ini                <- Tox file. Run for tests and linting
    
  
 
