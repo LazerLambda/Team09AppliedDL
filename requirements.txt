@@ -2,24 +2,17 @@
 -e .
 
 # external requirements
-argparse
-awscli
-coverage
-datetime
-EasyDict
-
-
-flake8==4.0.1
-Logger
-mlflow
-numpy
-pandas
-pytest
+EasyDict==1.9
+Sphinx==1.8.6
+awscli==1.25.57
+flake8==5.0.4
+mlflow==1.28.0
+numpy==1.21.6
+pandas==1.3.5
 python-dotenv>=0.5.1
-
-pytorch-ignite
-sklearn
-Sphinx
-torch
-tqdm
-wandb
+pytest==3.6.4
+pytorch-ignite==0.4.9
+sklearn==0.0
+torch==1.12.1
+tqdm==4.64.0
+wandb==0.13.1
